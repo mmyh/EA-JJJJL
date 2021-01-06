@@ -1,0 +1,6 @@
+include ':demo'
+include ':library'
+include ':annotation'
+include ':compiler'
+include ':app'
+rootProject.name = "EA-JJJJL"

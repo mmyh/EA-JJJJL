@@ -1,0 +1,13 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mmyh.eajjjjl.demo">
+
+    <application>
+        <activity android:name=".testfragment.TestFragmentActivity" />
+
+        <activity android:name=".fragmentandviewmodel.TestViewModelActivity" />
+
+        <activity android:name=".view.SingleGoodsListActivity" />
+
+        <activity android:name=".view.GoodsDetailActivity" />
+    </application>
+</manifest>

@@ -15,12 +15,10 @@ import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.MirroredTypesException;
 import javax.lang.model.type.TypeMirror;
 
-public class EAViewParentAnnotationHandler {
-
-    EAUtil eaUtil;
+public class EAViewParentAnnotationHandler extends EABaseAnnotationHandler {
 
     public EAViewParentAnnotationHandler(EAUtil eaUtil) {
-        this.eaUtil = eaUtil;
+        super(eaUtil);
     }
 
     public void handle(Element element, List<EAViewInfo> viewInfoList) {

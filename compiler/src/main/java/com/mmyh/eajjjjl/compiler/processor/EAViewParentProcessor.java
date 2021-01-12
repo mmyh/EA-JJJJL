@@ -2,8 +2,6 @@ package com.mmyh.eajjjjl.compiler.processor;
 
 import com.google.auto.service.AutoService;
 import com.mmyh.eajjjjl.annotation.EAView;
-import com.mmyh.eajjjjl.compiler.EABaseProcessor;
-import com.mmyh.eajjjjl.compiler.EAUtil;
 import com.mmyh.eajjjjl.compiler.annotationhandler.EAViewParentAnnotationHandler;
 import com.mmyh.eajjjjl.compiler.codegenerate.EAViewParentCodeGenerater;
 import com.mmyh.eajjjjl.compiler.model.EAViewInfo;
@@ -32,7 +30,6 @@ public class EAViewParentProcessor extends EABaseProcessor {
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
-        EAUtil eaUtil = new EAUtil(this, processingEnv);
         annotationHandler = new EAViewParentAnnotationHandler(eaUtil);
         codeGenerater = new EAViewParentCodeGenerater(eaUtil);
     }

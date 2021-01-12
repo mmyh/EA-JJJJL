@@ -13,11 +13,7 @@ public @interface EAApi {
 
     Class<?> request();
 
-    Class<?> callBack();
-
-    boolean showErrorToast() default true;
-
-    boolean showSuccessToast() default false;
+    Class<?> callBack() default Object.class;
 
     boolean controlLoadingDialog() default false;
 

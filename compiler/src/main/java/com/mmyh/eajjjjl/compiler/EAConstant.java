@@ -110,4 +110,25 @@ public class EAConstant {
 
     public static final String str_data = "data";
 
+    public static final String str_owner = "owner";
+
+    public static final String str_request = "request";
+
+    public static final String str_reCall = "reCall";
+
+    public static final String str_response = "response";
+
+    public static final String str_err = "err";
+
+    public static final String c_RECall = "com.mmyh.util.retrofitextension.RECall";
+
+    public static final String c_RetrofitService = "com.mmyh.util.retrofitextension.RetrofitService";
+
+    public static final String str_ErrorType = "ErrorType";
+
+    public static final String str_Response = "Response";
+
+    public static final String c_RetrofitError = "com.mmyh.util.retrofitextension.RetrofitError";
+
+    public static final String c_RetrofitError_ErrorType = "com.mmyh.util.retrofitextension.RetrofitError.ErrorType";
 }

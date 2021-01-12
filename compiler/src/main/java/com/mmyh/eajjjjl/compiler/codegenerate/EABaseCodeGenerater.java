@@ -3,11 +3,11 @@ package com.mmyh.eajjjjl.compiler.codegenerate;
 import com.mmyh.eajjjjl.compiler.EAUtil;
 import com.squareup.javapoet.ClassName;
 
-public abstract class BaseCodeGenerater {
+public abstract class EABaseCodeGenerater {
 
     public EAUtil eaUtil;
 
-    public BaseCodeGenerater(EAUtil eaUtil) {
+    public EABaseCodeGenerater(EAUtil eaUtil) {
         this.eaUtil = eaUtil;
     }
 

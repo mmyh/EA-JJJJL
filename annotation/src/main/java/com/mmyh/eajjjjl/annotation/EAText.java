@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EAText {
 
-    String vm();
+    String vm() default "";
 
     String m() default "";
 

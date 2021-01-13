@@ -1,6 +1,7 @@
 package com.mmyh.eajjjjl.compiler.annotationhandler;
 
 import com.mmyh.eajjjjl.annotation.EAApi;
+import com.mmyh.eajjjjl.compiler.EAConstant;
 import com.mmyh.eajjjjl.compiler.EAUtil;
 import com.mmyh.eajjjjl.compiler.model.EAApiInfo;
 import com.squareup.javapoet.ClassName;
@@ -60,7 +61,11 @@ public class EAViewModelParentAnnotationHandler extends EABaseAnnotationHandler 
             eaApi.callBack();
         } catch (MirroredTypeException e) {
             TypeMirror typeMirror = e.getTypeMirror();
-            apiInfo.callBack = typeMirror.toString();
+            if (Object.class.getCanonicalName().equals(typeMirror.toString())) {
+                apiInfo.callBack = EAConstant.c_EACallback;
+            } else {
+                apiInfo.callBack = typeMirror.toString();
+            }
         }
         try {
             eaApi.params();

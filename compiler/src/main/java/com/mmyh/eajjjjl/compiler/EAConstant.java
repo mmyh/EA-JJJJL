@@ -14,9 +14,9 @@ public class EAConstant {
 
     public static final String PARAM_OBJ = "obj";
 
-    public static final String RENDER = "com.mmyh.eajjjjl.library.EARender";
+    public static final String RENDER = "com.mmyh.eajjjjl.mvvm.EARender";
 
-    public static final String EAIImageRender = "com.mmyh.easyapp.api.EAIImageRender";
+    public static final String EAIImageRender = "com.mmyh.eajjjjl.mvvm.EAIImageRender";
 
     public static final String ImageView = "android.widget.ImageView";
 
@@ -60,7 +60,7 @@ public class EAConstant {
 
     public static final String v_data = "data";
 
-    public static final String c_EAListItemInfo = "com.mmyh.eajjjjl.library.EAListItemInfo";
+    public static final String c_EAListItemInfo = "com.mmyh.eajjjjl.mvvm.EAListItemInfo";
 
     public static final String c_SparseArray = "android.util.SparseArray";
 
@@ -114,21 +114,19 @@ public class EAConstant {
 
     public static final String str_request = "request";
 
-    public static final String str_reCall = "reCall";
+    public static final String str_eaCall = "eaCall";
 
     public static final String str_response = "response";
 
     public static final String str_err = "err";
 
-    public static final String c_RECall = "com.mmyh.util.retrofitextension.RECall";
+    public static final String c_EACall = "com.mmyh.eajjjjl.retrofitextension.EACall";
 
-    public static final String c_RetrofitService = "com.mmyh.util.retrofitextension.RetrofitService";
-
-    public static final String str_ErrorType = "ErrorType";
+    public static final String c_EARetrofitService = "com.mmyh.eajjjjl.retrofitextension.EARetrofitService";
 
     public static final String str_Response = "Response";
 
-    public static final String c_RetrofitError = "com.mmyh.util.retrofitextension.RetrofitError";
+    public static final String c_EACallback = "com.mmyh.eajjjjl.retrofitextension.EACallback";
 
-    public static final String c_RetrofitError_ErrorType = "com.mmyh.util.retrofitextension.RetrofitError.ErrorType";
+    public static final String c_Throwable = "java.lang.Throwable";
 }

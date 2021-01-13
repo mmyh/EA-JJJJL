@@ -57,15 +57,15 @@ public class EAViewModelParentCodeGenerater extends EABaseCodeGenerater {
             if (apiInfo.controlLoadingDialog) {
                 apiMethod.addParameter(boolean.class, "showLoadingDialog");
             }
-            apiMethod.addStatement("$T<$T> $N = $T.bind($N, $T.getApi($T.class).$N($N.toJson(), $N.getHeaderMap()))", getCN(EAConstant.c_RECall), apiInfo.returnType, EAConstant.str_reCall, getCN(EAConstant.c_RECall), EAConstant.str_owner, getCN(EAConstant.c_RetrofitService), getCN(apiInfo.apiClass), apiInfo.apiMethod, EAConstant.str_request, EAConstant.str_request);
+            apiMethod.addStatement("$T<$T> $N = $T.bind($N, $T.getApi($T.class).$N($N.toJson(), $N.getHeaderMap()))", getCN(EAConstant.c_EACall), apiInfo.returnType, EAConstant.str_eaCall, getCN(EAConstant.c_EACall), EAConstant.str_owner, getCN(EAConstant.c_EARetrofitService), getCN(apiInfo.apiClass), apiInfo.apiMethod, EAConstant.str_request, EAConstant.str_request);
             if (apiInfo.controlLoadingDialog) {
                 apiMethod.addCode("if(!showLoadingDialog){\n");
                 apiMethod.addStatement("reCall.noDialog()");
                 apiMethod.addCode("}\n");
             }
-            apiMethod.addCode("$N.enqueue(new $T<$T>() {\n", EAConstant.str_reCall, getCN(apiInfo.callBack), apiInfo.returnType);
+            apiMethod.addCode("$N.enqueue(new $T<$T>() {\n", EAConstant.str_eaCall, getCN(apiInfo.callBack), apiInfo.returnType);
             apiMethod.addCode("@Override\n");
-            apiMethod.addCode("protected void onFinish($T $N, $T.ErrorType $N) {\n", apiInfo.returnType, EAConstant.str_response, getCN(EAConstant.c_RetrofitError), EAConstant.str_err);
+            apiMethod.addCode("protected void onFinish($T $N, $T $N) {\n", apiInfo.returnType, EAConstant.str_response, getCN(EAConstant.c_Throwable), EAConstant.str_err);
             String apiData = packageFullName + ".ex." + typeElement.getSimpleName().toString() + "Ex." + eaUtil.firstToUpperCase(apiInfo.apiMethod) + "Data";
             apiMethod.addStatement("$T $N = new $T()", getCN(apiData), EAConstant.str_data, getCN(apiData));
             apiMethod.addCode("if($N==null){\n", EAConstant.str_response);

@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.mmyh.eajjjjl.annotation.EAApi;
 import com.mmyh.eajjjjl.annotation.EAViewModelEx;
-import com.mmyh.eajjjjl.demo.BaseCallback;
+import com.mmyh.eajjjjl.demo.TestCallback;
 import com.mmyh.eajjjjl.demo.model.Goods;
 import com.mmyh.eajjjjl.demo.model.Shop;
 import com.mmyh.eajjjjl.demo.viewmodel.ex.SingleGoodsListViewModelEx;
@@ -17,13 +17,13 @@ import com.mmyh.eajjjjl.demo.viewmodel.ex.SingleGoodsListViewModelEx;
 import java.util.ArrayList;
 import java.util.List;
 
-@EAViewModelEx(ViewModel.class)
+@EAViewModelEx
 public class SingleGoodsListViewModel extends SingleGoodsListViewModelEx {
 
 
     private Handler handler = new Handler(Looper.getMainLooper());
 
-    @EAApi(api = "com.mmyh.eajjjjl.demo.Api,test,java.util.List<com.mmyh.eajjjjl.demo.model.Goods>", request = String.class, callBack = BaseCallback.class, params = {String.class, Integer.class})
+    @EAApi(api = "com.mmyh.eajjjjl.demo.Api,test,java.util.List<com.mmyh.eajjjjl.demo.model.Goods>", request = String.class, params = {String.class, Integer.class})
     public MutableLiveData<List<Goods>> goodsList = new MutableLiveData<>();
 
     public void getGoodsList() {

@@ -11,8 +11,8 @@ public class SingleGoodsListViewModelEx extends ViewModel {
 
     public static final class TestData {
         public List<Goods> response;
-        public com.mmyh.util.retrofitextension.RetrofitError.ErrorType err;
         public String p1;
         public Integer p2;
+        public Throwable err;
     }
 }

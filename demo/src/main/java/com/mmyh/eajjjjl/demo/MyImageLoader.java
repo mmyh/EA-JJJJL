@@ -4,7 +4,7 @@ import android.widget.ImageView;
 
 import androidx.fragment.app.FragmentActivity;
 
-import com.mmyh.eajjjjl.library.BaseImageLoader;
+import com.mmyh.eajjjjl.mvvm.BaseImageLoader;
 
 
 public class MyImageLoader extends BaseImageLoader {

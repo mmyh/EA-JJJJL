@@ -4,7 +4,7 @@ import android.widget.ImageView;
 
 import androidx.fragment.app.FragmentActivity;
 
-import com.mmyh.eajjjjl.library.EAIImageRender;
+import com.mmyh.eajjjjl.mvvm.EAIImageRender;
 
 
 public class BaseActivity extends FragmentActivity implements EAIImageRender {

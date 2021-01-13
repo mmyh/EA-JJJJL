@@ -8,11 +8,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.mmyh.eajjjjl.annotation.EAView;
 import com.mmyh.eajjjjl.demo.databinding.FmtView1Binding;
-import com.mmyh.eajjjjl.library.EAjjjjl;
+import com.mmyh.eajjjjl.mvvm.EAMvvm;
 
 
 @EAView(viewModels = TestViewModel.class,
@@ -23,7 +22,7 @@ public class F1Fragment extends F1FragmentParent {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        EAjjjjl.work(this, container);
+        EAMvvm.work(this, container);
         return fmtView1Binding.getRoot();
     }
 

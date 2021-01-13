@@ -1,6 +1,7 @@
+include ':retrofitextension'
 include ':demo'
-include ':library'
+include ':mvvm'
 include ':annotation'
 include ':compiler'
 include ':app'
-rootProject.name = "EA-JJJJL"
+rootProject.name = "EAJJJJL"

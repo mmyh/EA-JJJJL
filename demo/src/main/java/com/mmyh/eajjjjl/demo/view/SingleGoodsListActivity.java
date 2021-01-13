@@ -14,7 +14,7 @@ import com.mmyh.eajjjjl.demo.databinding.ActSingleGoodsListBinding;
 import com.mmyh.eajjjjl.demo.databinding.ActSingleGoodsListItemBinding;
 import com.mmyh.eajjjjl.demo.model.Goods;
 import com.mmyh.eajjjjl.demo.viewmodel.SingleGoodsListViewModel;
-import com.mmyh.eajjjjl.library.EAjjjjl;
+import com.mmyh.eajjjjl.mvvm.EAMvvm;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class SingleGoodsListActivity extends SingleGoodsListActivityParent {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EAjjjjl.work(this);
+        EAMvvm.work(this);
         setContentView(actSingleGoodsListBinding.getRoot());
         recyclerview.setLayoutManager(new LinearLayoutManager(this));
         recyclerview.setAdapter(mAdapter);

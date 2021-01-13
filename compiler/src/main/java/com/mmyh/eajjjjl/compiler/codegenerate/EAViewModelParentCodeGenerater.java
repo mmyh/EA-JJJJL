@@ -60,7 +60,7 @@ public class EAViewModelParentCodeGenerater extends EABaseCodeGenerater {
             apiMethod.addStatement("$T<$T> $N = $T.bind($N, $T.getApi($T.class).$N($N.toJson(), $N.getHeaderMap()))", getCN(EAConstant.c_EACall), apiInfo.returnType, EAConstant.str_eaCall, getCN(EAConstant.c_EACall), EAConstant.str_owner, getCN(EAConstant.c_EARetrofitService), getCN(apiInfo.apiClass), apiInfo.apiMethod, EAConstant.str_request, EAConstant.str_request);
             if (apiInfo.controlLoadingDialog) {
                 apiMethod.addCode("if(!showLoadingDialog){\n");
-                apiMethod.addStatement("reCall.noDialog()");
+                apiMethod.addStatement("$N.noDialog(), EAConstant.str_eaCall");
                 apiMethod.addCode("}\n");
             }
             apiMethod.addCode("$N.enqueue(new $T<$T>() {\n", EAConstant.str_eaCall, getCN(apiInfo.callBack), apiInfo.returnType);

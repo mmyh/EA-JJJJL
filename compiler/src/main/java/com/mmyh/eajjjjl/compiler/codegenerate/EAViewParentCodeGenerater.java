@@ -2,7 +2,6 @@ package com.mmyh.eajjjjl.compiler.codegenerate;
 
 import com.mmyh.eajjjjl.annotation.EAModelEx;
 import com.mmyh.eajjjjl.annotation.EAParent;
-import com.mmyh.eajjjjl.annotation.EASuper;
 import com.mmyh.eajjjjl.compiler.EAConstant;
 import com.mmyh.eajjjjl.compiler.EAUtil;
 import com.mmyh.eajjjjl.compiler.EAWidgetInfo;
@@ -93,33 +92,33 @@ public class EAViewParentCodeGenerater extends EABaseCodeGenerater {
         return false;
     }
 
-    private Element getSuperClassElementHasOnDestory(TypeMirror typeMirror) {
-        if (typeMirror == null) {
-            return null;
-        }
-        Element element = eaUtil.types.asElement(typeMirror);
-        if (element == null) {
-            return null;
-        }
-        if (element instanceof TypeElement) {
-            TypeElement typeElement = (TypeElement) element;
-            EASuper eaSuper = typeElement.getAnnotation(EASuper.class);
-            if (null != eaSuper) {
-                try {
-                    Class cls = eaSuper.superClas();
-                } catch (MirroredTypeException e) {
-                    return getSuperClassElementHasOnDestory(e.getTypeMirror());
-                }
-            }
-            String name = typeElement.getQualifiedName().toString();
-            if (EAUtil.equals(name, EAConstant.c_Fragment) || EAUtil.equals(name, EAConstant.c_FragmentActivity)) {
-                return element;
-            } else {
-                return getSuperClassElementHasOnDestory(typeElement.getSuperclass());
-            }
-        }
-        return null;
-    }
+//    private Element getSuperClassElementHasOnDestory(TypeMirror typeMirror) {
+//        if (typeMirror == null) {
+//            return null;
+//        }
+//        Element element = eaUtil.types.asElement(typeMirror);
+//        if (element == null) {
+//            return null;
+//        }
+//        if (element instanceof TypeElement) {
+//            TypeElement typeElement = (TypeElement) element;
+//            EASuper eaSuper = typeElement.getAnnotation(EASuper.class);
+//            if (null != eaSuper) {
+//                try {
+//                    Class cls = eaSuper.superClas();
+//                } catch (MirroredTypeException e) {
+//                    return getSuperClassElementHasOnDestory(e.getTypeMirror());
+//                }
+//            }
+//            String name = typeElement.getQualifiedName().toString();
+//            if (EAUtil.equals(name, EAConstant.c_Fragment) || EAUtil.equals(name, EAConstant.c_FragmentActivity)) {
+//                return element;
+//            } else {
+//                return getSuperClassElementHasOnDestory(typeElement.getSuperclass());
+//            }
+//        }
+//        return null;
+//    }
 
     private void addForDiffSuper(TypeSpec.Builder tsBuilder, EAViewInfo eaViewInfo, boolean superClassIsView) {
         if (superClassIsView) {

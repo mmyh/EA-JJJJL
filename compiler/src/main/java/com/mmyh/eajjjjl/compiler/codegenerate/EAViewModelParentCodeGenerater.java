@@ -1,6 +1,6 @@
 package com.mmyh.eajjjjl.compiler.codegenerate;
 
-import com.mmyh.eajjjjl.annotation.EASuper;
+import com.mmyh.eajjjjl.annotation.EAViewModelEx;
 import com.mmyh.eajjjjl.compiler.EAConstant;
 import com.mmyh.eajjjjl.compiler.EAUtil;
 import com.mmyh.eajjjjl.compiler.model.EAApiInfo;
@@ -30,9 +30,9 @@ public class EAViewModelParentCodeGenerater extends EABaseCodeGenerater {
         String packageFullName = eaUtil.elementUtils.getPackageOf(typeElement).getQualifiedName().toString();
         TypeSpec.Builder tsBuilder = TypeSpec.classBuilder(viewModelName.substring(viewModelName.lastIndexOf(".") + 1) + "Parent")
                 .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT);
-        if (typeElement != null && typeElement.getAnnotation(EASuper.class) != null) {
+        if (typeElement.getAnnotation(EAViewModelEx.class) != null) {
             try {
-                typeElement.getAnnotation(EASuper.class).superClass();
+                typeElement.getAnnotation(EAViewModelEx.class).superClass();
             } catch (MirroredTypeException e) {
                 if (!e.getTypeMirror().toString().equals(Object.class.getCanonicalName())) {
                     tsBuilder.superclass(TypeName.get(e.getTypeMirror()));

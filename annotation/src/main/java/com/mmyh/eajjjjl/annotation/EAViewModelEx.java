@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EAViewModelEx {
 
-    Class<?> value() default Object.class;
+    Class<?> superClass() default Object.class;
 
 }

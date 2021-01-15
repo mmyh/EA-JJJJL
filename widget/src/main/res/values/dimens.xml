@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="banner_dot_size">8dp</dimen>
+    <dimen name="banner_dot_padding_bottom">15dp</dimen>
+    <dimen name="banner_dot_rl_margin">4dp</dimen>
+</resources>

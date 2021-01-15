@@ -1,3 +1,6 @@
+include ':router'
+include ':listhelper'
+include ':widget'
 include ':retrofitextension'
 include ':demo'
 include ':mvvm'

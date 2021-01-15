@@ -15,8 +15,11 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/compiler" />
             <option value="$PROJECT_DIR$/demo" />
+            <option value="$PROJECT_DIR$/listhelper" />
             <option value="$PROJECT_DIR$/mvvm" />
             <option value="$PROJECT_DIR$/retrofitextension" />
+            <option value="$PROJECT_DIR$/router" />
+            <option value="$PROJECT_DIR$/widget" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

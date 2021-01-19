@@ -290,8 +290,8 @@ public class EAViewParentCodeGenerater extends EABaseCodeGenerater {
                         renderMethod.addStatement("$N($N)", customerRenderMethodName, EAConstant.VALUE);
                         renderMethod.addCode("}\n");
                         renderMethod.addCode("};\n");
-                        renderMethod.addStatement("$N.$N.observe($N, $N)", viewModelSimpleName, veName, superClassIsView ? EAConstant.str_lifecycleOwner : EAConstant.THIS, observerFieldName);
                         renderMethod.addCode("}\n");
+                        renderMethod.addStatement("$N.$N.observe($N, $N)", viewModelSimpleName, veName, superClassIsView ? EAConstant.str_lifecycleOwner : EAConstant.THIS, observerFieldName);
                         MethodSpec.Builder customerRenderMethod = MethodSpec.methodBuilder(customerRenderMethodName)
                                 .returns(TypeName.VOID)
                                 .addModifiers(Modifier.PROTECTED)

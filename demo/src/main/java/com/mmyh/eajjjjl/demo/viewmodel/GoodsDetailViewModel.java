@@ -12,7 +12,7 @@ import com.mmyh.eajjjjl.demo.model.Shop;
 import com.mmyh.eajjjjl.demo.viewmodel.ex.GoodsDetailViewModelEx;
 
 
-@EAViewModelEx(ViewModel.class)
+@EAViewModelEx(superClass = ViewModel.class)
 public class GoodsDetailViewModel extends GoodsDetailViewModelEx {
 
 

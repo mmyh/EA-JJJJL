@@ -17,7 +17,7 @@ import com.mmyh.eajjjjl.demo.viewmodel.ex.SingleGoodsListViewModelEx;
 import java.util.ArrayList;
 import java.util.List;
 
-@EAViewModelEx
+@EAViewModelEx(superClass = ViewModel.class)
 public class SingleGoodsListViewModel extends SingleGoodsListViewModelEx {
 
 

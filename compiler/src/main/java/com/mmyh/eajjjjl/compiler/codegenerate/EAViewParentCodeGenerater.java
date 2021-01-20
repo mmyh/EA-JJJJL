@@ -243,6 +243,8 @@ public class EAViewParentCodeGenerater extends EABaseCodeGenerater {
                         if (isEAModel) {
                             renderMethod.addCode("if($N != null){\n", EAConstant.VALUE);
                         }
+                        List<String> headViewDataRenderedList = new ArrayList<>();
+                        List<String> footViewDataRenderedList = new ArrayList<>();
                         for (EAWidgetInfo widgetInfo : eaViewInfo.widgetsList) {
                             Set<String> types = widgetInfo.annotationsMap.keySet();
                             for (String type : types) {
@@ -254,13 +256,17 @@ public class EAViewParentCodeGenerater extends EABaseCodeGenerater {
                                 if (typeMirror.toString().equals(vms[0])
                                         && veName.equals(vms[1])) {
                                     if (eaViewInfo.headViewBinding != null
-                                            && eaViewInfo.headViewBinding.toString().equals(widgetInfo.binding)) {
+                                            && eaViewInfo.headViewBinding.toString().equals(widgetInfo.binding)
+                                            && !headViewDataRenderedList.contains(annotationValue.vm)) {
+                                        headViewDataRenderedList.add(annotationValue.vm);
                                         cb.addStatement("$N.$N.$N = $N", EAConstant.str_mAdapter, EAConstant.str_HeadViewData, veName, EAConstant.VALUE);
                                         cb.addStatement("$N.$N()", EAConstant.str_mAdapter, EAConstant.m_SetHeadViewData);
                                         continue;
                                     }
                                     if (eaViewInfo.footViewBinding != null
-                                            && eaViewInfo.footViewBinding.toString().equals(widgetInfo.binding)) {
+                                            && eaViewInfo.footViewBinding.toString().equals(widgetInfo.binding)
+                                            && !footViewDataRenderedList.contains(annotationValue.vm)) {
+                                        footViewDataRenderedList.add(annotationValue.vm);
                                         cb.addStatement("$N.$N.$N = $N", EAConstant.str_mAdapter, EAConstant.str_FootViewData, veName, EAConstant.VALUE);
                                         cb.addStatement("$N.$N()", EAConstant.str_mAdapter, EAConstant.m_SetFootViewData);
                                         continue;

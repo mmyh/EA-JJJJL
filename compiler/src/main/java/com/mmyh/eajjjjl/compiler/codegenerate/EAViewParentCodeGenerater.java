@@ -196,12 +196,14 @@ public class EAViewParentCodeGenerater extends EABaseCodeGenerater {
             initMethod.addCode("}\n");
             bindingSimpleNameMap.put(typeMirror, bindingName);
         }
-        for (EAWidgetInfo widgetInfo : eaViewInfo.widgetsList) {
-            for (TypeMirror bindingTM : eaViewInfo.bindings) {
-                if (bindingTM.toString().equals(widgetInfo.binding)) {
-                    tsBuilder.addField(getCN(widgetInfo.widgetType), widgetInfo.id, Modifier.PUBLIC);
+        for (TypeMirror bindingTM : eaViewInfo.bindings) {
+            TypeElement binding = eaUtil.elementUtils.getTypeElement(bindingTM.toString());
+            for (Element element : binding.getEnclosedElements()) {
+                if (element instanceof VariableElement) {
+                    String widgetName = element.getSimpleName().toString();
+                    tsBuilder.addField(ClassName.get(element.asType()), widgetName, Modifier.PUBLIC);
                     CodeBlock.Builder cb = CodeBlock.builder();
-                    cb.addStatement("this.$N = $N.$N", widgetInfo.id, bindingSimpleNameMap.get(bindingTM), widgetInfo.id);
+                    cb.addStatement("this.$N = $N.$N", widgetName, bindingSimpleNameMap.get(bindingTM), widgetName);
                     initMethod.addCode(cb.build());
                 }
             }

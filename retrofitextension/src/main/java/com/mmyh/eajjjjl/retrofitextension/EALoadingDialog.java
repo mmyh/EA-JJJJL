@@ -87,7 +87,9 @@ public class EALoadingDialog {
                     }
                     if (activity != null && !activity.isFinishing()) {
                         int count = (int) rootView.getTag(R.id.re_loading_count);
-                        count--;
+                        if (count > 0) {
+                            count--;
+                        }
                         rootView.setTag(R.id.re_loading_count, count);
                         if (view != null && count == 0 && view.getVisibility() != View.GONE) {
                             long tmp = 500 - (System.currentTimeMillis() - (long) rootView.getTag(R.id.re_loading_time));

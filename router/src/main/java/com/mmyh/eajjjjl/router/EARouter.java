@@ -2,13 +2,22 @@ package com.mmyh.eajjjjl.router;
 
 import android.content.Intent;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import com.mmyh.eajjjjl.annotation.EAServiceImpl;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class EARouter {
+
+    private final Map<String, ? extends EAService> serviceCache = new ConcurrentHashMap<>();
 
     private final Map<Class, EAService> serviceMap = new HashMap<>();
 
@@ -96,6 +105,29 @@ public class EARouter {
             f.getChildFragmentManager().executePendingTransactions();
         }
         return (EAFragment) fragment;
+    }
+
+    public static <T extends EAService> T service(final Class<T> service) {
+        return (T) Proxy.newProxyInstance(service.getClassLoader(), new Class<?>[]{service},
+                new InvocationHandler() {
+
+                    @Override
+                    public @Nullable
+                    Object invoke(Object proxy, Method method,
+                                  @Nullable Object[] args) throws Throwable {
+                        EAServiceImpl annotation = service.getAnnotation(EAServiceImpl.class);
+                        if (annotation != null) {
+                            EAService eaService = SingletonHolder.instance.serviceCache.get(annotation.name());
+                            if (eaService == null) {
+                                eaService = (EAService) Class.forName(annotation.name()).newInstance();
+                            }
+                            Class serviceClass = eaService.getClass();
+                            Method serviceMethod = serviceClass.getDeclaredMethod(method.getName(), method.getParameterTypes());
+                            return serviceMethod.invoke(eaService, args);
+                        }
+                        return null;
+                    }
+                });
     }
 
 }

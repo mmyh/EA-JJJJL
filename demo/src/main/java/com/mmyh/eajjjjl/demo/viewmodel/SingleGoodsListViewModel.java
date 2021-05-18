@@ -23,7 +23,6 @@ public class SingleGoodsListViewModel extends SingleGoodsListViewModelEx {
 
     private Handler handler = new Handler(Looper.getMainLooper());
 
-    @EAApi(api = "com.mmyh.eajjjjl.demo.Api,test,java.util.List<com.mmyh.eajjjjl.demo.model.Goods>", request = String.class, params = {String.class, Integer.class})
     public MutableLiveData<List<Goods>> goodsList = new MutableLiveData<>();
 
     public void getGoodsList() {

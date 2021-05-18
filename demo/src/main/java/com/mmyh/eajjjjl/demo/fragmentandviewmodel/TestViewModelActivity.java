@@ -10,6 +10,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.mmyh.eajjjjl.demo.R;
+import com.mmyh.eajjjjl.demo1.service.Demo1Service;
+import com.mmyh.eajjjjl.router.EARouter;
 
 
 public class TestViewModelActivity extends FragmentActivity {
@@ -33,6 +35,8 @@ public class TestViewModelActivity extends FragmentActivity {
             }
         });
         addFragment(f1Fragment);
+        EARouter.service(Demo1Service.class).goDemo1("1", 0, null);
+        System.out.println("doDemo2:" + EARouter.service(Demo1Service.class).doDemo2(2));
     }
 
     private void addFragment(Fragment fragment) {

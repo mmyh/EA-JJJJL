@@ -7,12 +7,14 @@ import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
+import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.symbolsolver.JavaSymbolSolver;
 import com.github.javaparser.symbolsolver.model.resolution.TypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
+import com.mmyh.eajjjjl.annotation.EAServicePrivate;
 import com.mmyh.eajjjjl.compiler.EAUtil;
 import com.mmyh.eajjjjl.compiler.model.EAServiceInfo;
 
@@ -23,13 +25,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class EAServiceAnnotationHandler extends EABaseAnnotationHandler {
     public EAServiceAnnotationHandler(EAUtil eaUtil) {
         super(eaUtil);
     }
 
-    public void handle(List<EAServiceInfo> serviceInfoList) throws Exception {
+    public void handle(List<EAServiceInfo> serviceInfoList, List<String> myServiceList) throws Exception {
         List<String> list = new ArrayList<>();
         String filepath = System.getProperty("user.dir") + File.separator + "service.config";
         File file = new File(filepath);
@@ -81,25 +84,29 @@ public class EAServiceAnnotationHandler extends EABaseAnnotationHandler {
                     //printNote("import:" + id.getNameAsString());
                 });
                 cu.findAll(MethodDeclaration.class).forEach(md -> {
-                    EAServiceInfo.MethodInfo methodInfo = new EAServiceInfo.MethodInfo();
-                    methodInfo.name = md.getNameAsString();
-                    //printNote(methodInfo.name);
-                    String returnType = getType(md.getType(), importsList);
-                    //printNote("returnType:" + returnType);
-                    methodInfo.returnType = returnType;
-                    NodeList<Modifier> modifiers = md.getModifiers();
-                    if (modifiers != null
-                            && modifiers.contains(Modifier.publicModifier())
-                            && !modifiers.contains(Modifier.staticModifier())) {
-                        NodeList<Parameter> parameters = md.getParameters();
-                        for (Parameter parameter : parameters) {
-                            String type = getType(parameter.getType(), importsList);
-                            if (!eaUtil.isEmptyStr(type)) {
-                                methodInfo.params.put(type, parameter.getNameAsString());
+                    Optional<AnnotationExpr> annotationByClass = md.getAnnotationByClass(EAServicePrivate.class);
+                    if (!annotationByClass.isPresent()
+                            || myServiceList.contains(eaServiceInfo.serviceName)) {
+                        EAServiceInfo.MethodInfo methodInfo = new EAServiceInfo.MethodInfo();
+                        methodInfo.name = md.getNameAsString();
+                        //printNote(methodInfo.name);
+                        String returnType = getType(md.getType(), importsList);
+                        //printNote("returnType:" + returnType);
+                        methodInfo.returnType = returnType;
+                        NodeList<Modifier> modifiers = md.getModifiers();
+                        if (modifiers != null
+                                && modifiers.contains(Modifier.publicModifier())
+                                && !modifiers.contains(Modifier.staticModifier())) {
+                            NodeList<Parameter> parameters = md.getParameters();
+                            for (Parameter parameter : parameters) {
+                                String type = getType(parameter.getType(), importsList);
+                                if (!eaUtil.isEmptyStr(type)) {
+                                    methodInfo.params.put(type, parameter.getNameAsString());
+                                }
                             }
                         }
+                        eaServiceInfo.methods.add(methodInfo);
                     }
-                    eaServiceInfo.methods.add(methodInfo);
                 });
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

@@ -1,7 +1,8 @@
 package com.mmyh.eajjjjl.compiler.processor;
 
 import com.google.auto.service.AutoService;
-import com.mmyh.eajjjjl.annotation.EAServiceAuto;
+import com.mmyh.eajjjjl.annotation.EAApi;
+import com.mmyh.eajjjjl.annotation.EAServiceConfig;
 import com.mmyh.eajjjjl.compiler.annotationhandler.EAServiceAnnotationHandler;
 import com.mmyh.eajjjjl.compiler.codegenerate.EAServiceCodeGenerater;
 import com.mmyh.eajjjjl.compiler.model.EAServiceInfo;
@@ -15,7 +16,11 @@ import java.util.Set;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.MirroredTypesException;
+import javax.lang.model.type.TypeMirror;
 
 @AutoService(Processor.class)
 public class EAServiceProcessor extends EABaseProcessor {
@@ -38,7 +43,7 @@ public class EAServiceProcessor extends EABaseProcessor {
     @Override
     public Set<String> getSupportedAnnotationTypes() {
         HashSet<String> supportTypes = new LinkedHashSet<>();
-        supportTypes.add(EAServiceAuto.class.getCanonicalName());
+        supportTypes.add(EAServiceConfig.class.getCanonicalName());
         return supportTypes;
     }
 
@@ -47,8 +52,24 @@ public class EAServiceProcessor extends EABaseProcessor {
                            RoundEnvironment roundEnv) {
         printNote("start");
         if (!roundEnv.processingOver() && !isProcessed) {
+            Set<? extends Element> serviceCfgs =
+                    roundEnv.getElementsAnnotatedWith(EAServiceConfig.class);
+            List<String> myServiceList = new ArrayList<>();
+            for (Element element : serviceCfgs) {
+                EAServiceConfig serviceConfig = element.getAnnotation(EAServiceConfig.class);
+                try {
+                    serviceConfig.myServices();
+                } catch (MirroredTypesException e) {
+                    List<? extends TypeMirror> typeMirrors = e.getTypeMirrors();
+                    for (TypeMirror tm : typeMirrors) {
+                        if (!myServiceList.contains(tm.toString())) {
+                            myServiceList.add(tm.toString());
+                        }
+                    }
+                }
+            }
             try {
-                annotationHandler.handle(serviceInfoList);
+                annotationHandler.handle(serviceInfoList, myServiceList);
                 for (EAServiceInfo eaServiceInfo : serviceInfoList) {
                     codeGenerater.generate(eaServiceInfo);
                 }

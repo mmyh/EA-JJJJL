@@ -1,5 +1,6 @@
 package com.mmyh.eajjjjl.demo1.service;
 
+import com.mmyh.eajjjjl.annotation.EAServicePrivate;
 import com.mmyh.eajjjjl.demo1.model.User;
 import com.mmyh.eajjjjl.router.EAService;
 
@@ -23,5 +24,10 @@ public class Demo1ServiceImpl extends EAService {
 
     public Integer doDemo2(long a) {
         return 99;
+    }
+
+    @EAServicePrivate
+    public void doDemo3(){
+
     }
 }

@@ -107,7 +107,7 @@ public class EARouter {
         return (EAFragment) fragment;
     }
 
-    public static <T extends EAService> T service(final Class<T> service) {
+    public static <T> T service(final Class<T> service) {
         return (T) Proxy.newProxyInstance(service.getClassLoader(), new Class<?>[]{service},
                 new InvocationHandler() {
 

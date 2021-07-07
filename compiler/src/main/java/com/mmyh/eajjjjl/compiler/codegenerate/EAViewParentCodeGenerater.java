@@ -31,8 +31,6 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
 
-import javassist.Modifier;
-
 public class EAViewParentCodeGenerater extends EABaseCodeGenerater {
 
     public EAViewParentCodeGenerater(EAUtil eaUtil) {

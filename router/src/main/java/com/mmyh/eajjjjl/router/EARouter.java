@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class EARouter {
 
-    private final Map<String, ? extends EAService> serviceCache = new ConcurrentHashMap<>();
+    private final Map<String, EAService> serviceCache = new ConcurrentHashMap<>();
 
     private final Map<Class, EAService> serviceMap = new HashMap<>();
 
@@ -120,6 +120,7 @@ public class EARouter {
                             EAService eaService = SingletonHolder.instance.serviceCache.get(annotation.name());
                             if (eaService == null) {
                                 eaService = (EAService) Class.forName(annotation.name()).newInstance();
+                                SingletonHolder.instance.serviceCache.put(annotation.name(), eaService);
                             }
                             Class serviceClass = eaService.getClass();
                             Method serviceMethod = serviceClass.getDeclaredMethod(method.getName(), method.getParameterTypes());

@@ -22,6 +22,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
@@ -31,5 +35,6 @@ dependencies {
     compileOnly 'androidx.recyclerview:recyclerview:1.1.0'
     compileOnly 'androidx.constraintlayout:constraintlayout:2.0.4'
     compileOnly 'android.arch.lifecycle:common-java8:2.0.0'
-
+    compileOnly 'androidx.navigation:navigation-fragment:2.0.0'
+    compileOnly 'androidx.navigation:navigation-ui:2.0.0'
 }

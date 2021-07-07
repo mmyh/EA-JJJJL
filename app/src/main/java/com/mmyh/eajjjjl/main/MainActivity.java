@@ -1,16 +1,25 @@
 package com.mmyh.eajjjjl.main;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.mmyh.eajjjjl.demo.fragmentandviewmodel.TestViewModelActivity;
+import com.mmyh.eajjjjl.demo.menunavigation.MenuActivity;
 import com.mmyh.eajjjjl.demo.view.SingleGoodsListActivity;
 import com.mmyh.eajjjjl.main.databinding.ActivityMainBinding;
+import com.mmyh.eajjjjl.widget.toolbarwindow.EAPopWin;
+import com.mmyh.eajjjjl.widget.toolbarwindow.EAPopWinItem;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -50,6 +59,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, TestViewModelActivity.class));
             }
         });
-
+        binding.btn6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, MenuActivity.class));
+            }
+        });
     }
+
+
 }

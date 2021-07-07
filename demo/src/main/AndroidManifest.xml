@@ -9,5 +9,7 @@
         <activity android:name=".view.SingleGoodsListActivity" />
 
         <activity android:name=".view.GoodsDetailActivity" />
+
+        <activity android:name=".menunavigation.MenuActivity"/>
     </application>
 </manifest>

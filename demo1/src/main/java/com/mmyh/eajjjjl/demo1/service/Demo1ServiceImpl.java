@@ -10,6 +10,8 @@ public class Demo1ServiceImpl extends EAService {
 
     private int a;
 
+    private int e = 1;
+
     public void goDemo1(String a, int b, Long c) {
         System.out.println("goDemo1 start");
         System.out.println("a=" + a);
@@ -23,7 +25,8 @@ public class Demo1ServiceImpl extends EAService {
     }
 
     public Integer doDemo2(long a) {
-        return 99;
+        e++;
+        return e;
     }
 
     @EAServicePrivate

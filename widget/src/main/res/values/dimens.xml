@@ -3,4 +3,10 @@
     <dimen name="banner_dot_size">8dp</dimen>
     <dimen name="banner_dot_padding_bottom">15dp</dimen>
     <dimen name="banner_dot_rl_margin">4dp</dimen>
+    <dimen name="dp_52">52dp</dimen>
+    <dimen name="dp_16">16dp</dimen>
+    <dimen name="dp_20">20dp</dimen>
+    <dimen name="dp_12">12dp</dimen>
+    <dimen name="dp_8">8dp</dimen>
+    <dimen name="dp_240">240dp</dimen>
 </resources>

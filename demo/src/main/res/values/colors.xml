@@ -3,4 +3,5 @@
     <drawable name="common_error">#ff0000</drawable>
 
     <drawable name="my_error">#00ff00</drawable>
+    <drawable name="dividerback">#00ff00</drawable>
 </resources>

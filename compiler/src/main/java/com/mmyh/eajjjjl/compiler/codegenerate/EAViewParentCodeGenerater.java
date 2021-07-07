@@ -31,6 +31,8 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
 
+import javassist.Modifier;
+
 public class EAViewParentCodeGenerater extends EABaseCodeGenerater {
 
     public EAViewParentCodeGenerater(EAUtil eaUtil) {
@@ -360,7 +362,7 @@ public class EAViewParentCodeGenerater extends EABaseCodeGenerater {
             tsBuilder.addField(FieldSpec.builder(getCN(viewName + EAConstant.Adapter), EAConstant.str_mAdapter, Modifier.PROTECTED)
                     .initializer("new $T()", getCN(viewName + EAConstant.Adapter))
                     .build());
-            TypeSpec.Builder adapterTS = TypeSpec.classBuilder(viewName + EAConstant.Adapter);
+            TypeSpec.Builder adapterTS = TypeSpec.classBuilder(viewName + EAConstant.Adapter).addModifiers(Modifier.PUBLIC);
             adapterTS.superclass(ParameterizedTypeName.get(getCN(EAConstant.RecyclerView_Adapter), viewHolder));
             adapterTS.addField(FieldSpec.builder(ParameterizedTypeName.get(ClassName.get(List.class), TypeName.get(eaViewInfo.listModel)), EAConstant.v_data)
                     .initializer("new $T<>()", ArrayList.class)

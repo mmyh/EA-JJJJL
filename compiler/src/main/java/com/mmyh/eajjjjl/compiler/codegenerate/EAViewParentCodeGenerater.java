@@ -1,12 +1,9 @@
 package com.mmyh.eajjjjl.compiler.codegenerate;
 
-import com.mmyh.eajjjjl.annotation.EAModelEx;
 import com.mmyh.eajjjjl.annotation.EAParent;
 import com.mmyh.eajjjjl.compiler.EAConstant;
 import com.mmyh.eajjjjl.compiler.EAUtil;
-import com.mmyh.eajjjjl.compiler.EAWidgetInfo;
 import com.mmyh.eajjjjl.compiler.model.EAViewInfo;
-import com.mmyh.eajjjjl.compiler.render.EARenderFactory;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
@@ -22,13 +19,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
 
 public class EAViewParentCodeGenerater extends EABaseCodeGenerater {
@@ -92,34 +87,6 @@ public class EAViewParentCodeGenerater extends EABaseCodeGenerater {
         return false;
     }
 
-//    private Element getSuperClassElementHasOnDestory(TypeMirror typeMirror) {
-//        if (typeMirror == null) {
-//            return null;
-//        }
-//        Element element = eaUtil.types.asElement(typeMirror);
-//        if (element == null) {
-//            return null;
-//        }
-//        if (element instanceof TypeElement) {
-//            TypeElement typeElement = (TypeElement) element;
-//            EASuper eaSuper = typeElement.getAnnotation(EASuper.class);
-//            if (null != eaSuper) {
-//                try {
-//                    Class cls = eaSuper.superClas();
-//                } catch (MirroredTypeException e) {
-//                    return getSuperClassElementHasOnDestory(e.getTypeMirror());
-//                }
-//            }
-//            String name = typeElement.getQualifiedName().toString();
-//            if (EAUtil.equals(name, EAConstant.c_Fragment) || EAUtil.equals(name, EAConstant.c_FragmentActivity)) {
-//                return element;
-//            } else {
-//                return getSuperClassElementHasOnDestory(typeElement.getSuperclass());
-//            }
-//        }
-//        return null;
-//    }
-
     private void addForDiffSuper(TypeSpec.Builder tsBuilder, EAViewInfo eaViewInfo, boolean superClassIsView) {
         if (superClassIsView) {
             tsBuilder.addField(getCN(EAConstant.c_FragmentActivity), EAConstant.str_viewActivity, Modifier.PUBLIC);
@@ -144,28 +111,6 @@ public class EAViewParentCodeGenerater extends EABaseCodeGenerater {
                     .addStatement("super(context, attrs, defStyleAttr)")
                     .build());
         } else {
-//            tsBuilder.addField(FieldSpec.builder(boolean.class, EAConstant.str_needRenderWidget, Modifier.PRIVATE)
-//                    .initializer("true")
-//                    .build());
-//            tsBuilder.addMethod(MethodSpec.methodBuilder("isNeedRenderWidget")
-//                    .addModifiers(Modifier.PUBLIC)
-//                    .returns(boolean.class)
-//                    .addStatement("return $N", EAConstant.str_needRenderWidget)
-//                    .build());
-//            MethodSpec.Builder mbDestroy = MethodSpec.methodBuilder("onDestroy")
-//                    .addStatement("$N = true", EAConstant.str_needRenderWidget)
-//                    .addStatement("super.onDestroy()");
-//            Element element = getSuperClassElementHasOnDestory(eaViewInfo.superClass);
-//            if (element instanceof TypeElement) {
-//                List<? extends Element> list = element.getEnclosedElements();
-//                for (Element e : list) {
-//                    if (e instanceof ExecutableElement && e.getSimpleName().toString().equals("onDestroy")) {
-//                        mbDestroy.addModifiers(e.getModifiers());
-//                        tsBuilder.addMethod(mbDestroy.build());
-//                        break;
-//                    }
-//                }
-//            }
         }
     }
 
@@ -216,9 +161,6 @@ public class EAViewParentCodeGenerater extends EABaseCodeGenerater {
         MethodSpec.Builder renderMethod = MethodSpec.methodBuilder("renderWidget_" + viewName.replace(".", "_") + "Parent")
                 .addModifiers(Modifier.PUBLIC)
                 .returns(TypeName.VOID);
-//        if (!superClassIsView) {
-//            renderMethod.addStatement("$N = false", EAConstant.str_needRenderWidget);
-//        }
         for (TypeMirror typeMirror : eaViewInfo.viewModels) {
             TypeElement viewModel = eaUtil.elementUtils.getTypeElement(typeMirror.toString());
             String viewModelSimpleName = eaUtil.firstToLowerCase(viewModel.getSimpleName().toString());
@@ -240,60 +182,7 @@ public class EAViewParentCodeGenerater extends EABaseCodeGenerater {
                         renderMethod.addCode("$N = new $T<$T>() {\n", observerFieldName, getCN(EAConstant.OBSERVER), modelName);
                         renderMethod.addCode("@Override\n");
                         renderMethod.addCode("public void onChanged(final $T $N) {\n", modelName, EAConstant.VALUE);
-                        TypeElement model = eaUtil.elementUtils.getTypeElement(modelName.toString());
-                        boolean isEAModel = model != null && model.getAnnotation(EAModelEx.class) != null;
-                        if (isEAModel) {
-                            renderMethod.addCode("if($N != null){\n", EAConstant.VALUE);
-                        }
-                        List<String> headViewDataRenderedList = new ArrayList<>();
-                        List<String> footViewDataRenderedList = new ArrayList<>();
-                        for (EAWidgetInfo widgetInfo : eaViewInfo.widgetsList) {
-                            Set<String> types = widgetInfo.annotationsMap.keySet();
-                            for (String type : types) {
-                                EAWidgetInfo.AnnotationValue annotationValue = widgetInfo.annotationsMap.get(type);
-                                if (eaUtil.isEmptyStr(annotationValue.vm)) {
-                                    continue;
-                                }
-                                String[] vms = annotationValue.vm.split(EAConstant.SPLIT_DOUHAO);
-                                if (typeMirror.toString().equals(vms[0])
-                                        && veName.equals(vms[1])) {
-                                    if (eaViewInfo.headViewBinding != null
-                                            && eaViewInfo.headViewBinding.toString().equals(widgetInfo.binding)
-                                            && !headViewDataRenderedList.contains(annotationValue.vm)) {
-                                        headViewDataRenderedList.add(annotationValue.vm);
-                                        cb.addStatement("$N.$N.$N = $N", EAConstant.str_mAdapter, EAConstant.str_HeadViewData, veName, EAConstant.VALUE);
-                                        cb.addStatement("$N.$N()", EAConstant.str_mAdapter, EAConstant.m_SetHeadViewData);
-                                        continue;
-                                    }
-                                    if (eaViewInfo.footViewBinding != null
-                                            && eaViewInfo.footViewBinding.toString().equals(widgetInfo.binding)
-                                            && !footViewDataRenderedList.contains(annotationValue.vm)) {
-                                        footViewDataRenderedList.add(annotationValue.vm);
-                                        cb.addStatement("$N.$N.$N = $N", EAConstant.str_mAdapter, EAConstant.str_FootViewData, veName, EAConstant.VALUE);
-                                        cb.addStatement("$N.$N()", EAConstant.str_mAdapter, EAConstant.m_SetFootViewData);
-                                        continue;
-                                    }
-                                    for (TypeMirror bindingTM : eaViewInfo.bindings) {
-                                        if (bindingTM.toString().equals(widgetInfo.binding)) {
-                                            String[] ms = annotationValue.m.split(EAConstant.SPLIT_DOUHAO);
-                                            if (eaUtil.isEmptyStr(annotationValue.m)
-                                                    || !annotationValue.m.contains(EAConstant.SPLIT_DOUHAO)
-                                                    || ms.length < 2) {
-                                                EARenderFactory.render(cb, widgetInfo, EAConstant.VALUE, "", isEAModel);
-                                            } else if (ms.length == 2) {
-                                                EARenderFactory.render(cb, widgetInfo, EAConstant.VALUE, ms[1], isEAModel);
-                                            } else {
-                                                renderMultinestModel(widgetInfo, cb, EAConstant.VALUE, ms, isEAModel);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
                         renderMethod.addCode(cb.build());
-                        if (isEAModel) {
-                            renderMethod.addCode("}\n");
-                        }
                         String customerRenderMethodName = "render" + eaUtil.firstToUpperCase(veName);
                         renderMethod.addStatement("$N($N)", customerRenderMethodName, EAConstant.VALUE);
                         renderMethod.addCode("}\n");
@@ -381,6 +270,8 @@ public class EAViewParentCodeGenerater extends EABaseCodeGenerater {
                         .build());
                 adapterTS.addMethod(MethodSpec.methodBuilder(EAConstant.m_SetHeadViewData)
                         .addModifiers(Modifier.PUBLIC)
+                        .addParameter(TypeName.get(eaViewInfo.headViewModel), EAConstant.str_HeadViewData)
+                        .addStatement("this.$N = $N", EAConstant.str_HeadViewData, EAConstant.str_HeadViewData)
                         .addStatement("notifyItemChanged(0)")
                         .build());
             }
@@ -390,6 +281,8 @@ public class EAViewParentCodeGenerater extends EABaseCodeGenerater {
                         .build());
                 adapterTS.addMethod(MethodSpec.methodBuilder(EAConstant.m_SetFootViewData)
                         .addModifiers(Modifier.PUBLIC)
+                        .addParameter(TypeName.get(eaViewInfo.footViewModel), EAConstant.str_FootViewData)
+                        .addStatement("this.$N = $N", EAConstant.str_FootViewData, EAConstant.str_FootViewData)
                         .addStatement("notifyItemChanged(getItemCount()-1)")
                         .build());
             }
@@ -564,44 +457,6 @@ public class EAViewParentCodeGenerater extends EABaseCodeGenerater {
                 .addModifiers(Modifier.PUBLIC);
         if (model != null) {
             onBindViewHolderMB.addParameter(TypeName.get(model), EAConstant.str_data);
-            TypeElement modelElement = (TypeElement) eaUtil.types.asElement(model);
-            for (Element element : modelElement.getEnclosedElements()) {
-                if (element instanceof VariableElement) {
-                    TypeElement varElement = eaUtil.elementUtils.getTypeElement(element.asType().toString());
-                    boolean isEAModel = varElement != null && varElement.getAnnotation(EAModelEx.class) != null;
-                    CodeBlock.Builder cb = CodeBlock.builder();
-                    if (isEAModel) {
-                        onBindViewHolderMB.addCode("if($N.$N!=null){\n", EAConstant.str_data, element.getSimpleName().toString());
-                    }
-                    for (EAWidgetInfo widgetInfo : eaViewInfo.widgetsList) {
-                        if (viewBinding.toString().equals(widgetInfo.binding)) {
-                            Map<String, EAWidgetInfo.AnnotationValue> map = widgetInfo.annotationsMap;
-                            Set<String> set = map.keySet();
-                            for (String type : set) {
-                                EAWidgetInfo.AnnotationValue value = map.get(type);
-                                String[] vms = value.vm.split(EAConstant.SPLIT_DOUHAO);
-                                if (eaUtil.isEmptyStr(value.vm)
-                                        || !value.vm.contains(EAConstant.SPLIT_DOUHAO)
-                                        || vms.length < 2) {
-                                    continue;
-                                }
-                                if (element.getSimpleName().toString().equals(vms[1])) {
-                                    String[] ms = value.m.split(EAConstant.SPLIT_DOUHAO);
-                                    if (ms.length <= 2) {
-                                        EARenderFactory.render(cb, widgetInfo, EAConstant.str_data + "." + element.getSimpleName().toString(), (isEAModel && ms.length > 1) ? ms[1] : "", isEAModel);
-                                    } else {
-                                        renderMultinestModel(widgetInfo, cb, EAConstant.str_data + "." + element.getSimpleName().toString(), ms, isEAModel);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    onBindViewHolderMB.addCode(cb.build());
-                    if (isEAModel) {
-                        onBindViewHolderMB.addCode("}\n");
-                    }
-                }
-            }
             tsBuilder.addMethod(MethodSpec.methodBuilder("renderList" + name)
                     .addModifiers(Modifier.PROTECTED)
                     .addParameter(TypeName.get(viewBinding), EAConstant.str_binding)
@@ -629,28 +484,7 @@ public class EAViewParentCodeGenerater extends EABaseCodeGenerater {
             onBindViewHolderMB.addStatement("onListItemClick($N, $N, pos)", EAConstant.str_itemView, EAConstant.str_data);
             onBindViewHolderMB.addCode("}\n");
             onBindViewHolderMB.addStatement("})");
-            TypeElement listModelElement = eaUtil.elementUtils.getTypeElement(eaViewInfo.listModel.toString());
-            CodeBlock.Builder cb = CodeBlock.builder();
-            boolean isEAModel = listModelElement != null && listModelElement.getAnnotation(EAModelEx.class) != null;
-            for (EAWidgetInfo widgetInfo : eaViewInfo.widgetsList) {
-                if (typeMirror.toString().equals(widgetInfo.binding)) {
-                    Set<String> types = widgetInfo.annotationsMap.keySet();
-                    for (String type : types) {
-                        EAWidgetInfo.AnnotationValue annotationValue = widgetInfo.annotationsMap.get(type);
-                        String[] ms = annotationValue.m.split(EAConstant.SPLIT_DOUHAO);
-                        if (eaUtil.isEmptyStr(annotationValue.m)
-                                || !annotationValue.m.contains(EAConstant.SPLIT_DOUHAO)
-                                || ms.length < 2) {
-                            EARenderFactory.render(cb, widgetInfo, EAConstant.str_data, "", isEAModel);
-                        } else if (ms.length == 2) {
-                            EARenderFactory.render(cb, widgetInfo, EAConstant.str_data, ms[1], isEAModel);
-                        } else {
-                            renderMultinestModel(widgetInfo, cb, EAConstant.str_data, ms, isEAModel);
-                        }
-                    }
-                }
-            }
-            onBindViewHolderMB.addCode(cb.build());
+
             tsBuilder.addMethod(MethodSpec.methodBuilder("renderListItem")
                     .addModifiers(Modifier.PROTECTED)
                     .addParameter(TypeName.get(typeMirror), EAConstant.str_binding)
@@ -672,12 +506,6 @@ public class EAViewParentCodeGenerater extends EABaseCodeGenerater {
                 .addStatement("super($N)", EAConstant.str_itemView)
                 .addStatement("$N = $T.getBinding($N)", EAConstant.str_binding, getCN(EAConstant.DataBindingUtil), EAConstant.str_itemView);
         viewHolderTS.addField(TypeName.get(binding), EAConstant.str_binding, Modifier.PRIVATE);
-        for (EAWidgetInfo widgetInfo : eaViewInfo.widgetsList) {
-            if (binding.toString().equals(widgetInfo.binding)) {
-                viewHolderTS.addField(FieldSpec.builder(getCN(widgetInfo.widgetType), widgetInfo.id, Modifier.PRIVATE).build());
-                viewHolderConstructor.addStatement("$N = $N.$N", widgetInfo.id, EAConstant.str_binding, widgetInfo.id);
-            }
-        }
         viewHolderTS.addMethod(viewHolderConstructor.build());
     }
 
@@ -688,24 +516,6 @@ public class EAViewParentCodeGenerater extends EABaseCodeGenerater {
                 .addParameter(String.class, "url")
                 .returns(TypeName.VOID);
         tsBuilder.addMethod(renderImageMethod.build());
-    }
-
-    private void renderMultinestModel(EAWidgetInfo widgetInfo, CodeBlock.Builder cb, String prefix, String[] ms, boolean isEAModel) {
-        StringBuilder sb = new StringBuilder(prefix);
-        TypeElement tmpTE = eaUtil.elementUtils.getTypeElement(ms[0]);
-        cb.add("if(");
-        for (int i = 1; i < ms.length - 1; i++) {
-            sb.append(".").append(ms[i]);
-            for (Element element : tmpTE.getEnclosedElements()) {
-                if (element instanceof VariableElement && element.getSimpleName().toString().equals(ms[i])) {
-                    cb.add("$N$N!=null", i == 1 ? "" : "&&", sb.toString());
-                    tmpTE = eaUtil.elementUtils.getTypeElement(element.asType().toString());
-                }
-            }
-        }
-        cb.add("){\n");
-        EARenderFactory.render(cb, widgetInfo, sb.toString(), ms[ms.length - 1], isEAModel);
-        cb.add("}\n");
     }
 
 }

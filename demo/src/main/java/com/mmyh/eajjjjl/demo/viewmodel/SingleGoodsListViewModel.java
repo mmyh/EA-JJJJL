@@ -11,6 +11,7 @@ import com.mmyh.eajjjjl.annotation.EAApi;
 import com.mmyh.eajjjjl.annotation.EAViewModelEx;
 import com.mmyh.eajjjjl.demo.TestCallback;
 import com.mmyh.eajjjjl.demo.model.Goods;
+import com.mmyh.eajjjjl.demo.model.ListHead;
 import com.mmyh.eajjjjl.demo.model.Shop;
 import com.mmyh.eajjjjl.demo.viewmodel.ex.SingleGoodsListViewModelEx;
 
@@ -24,6 +25,10 @@ public class SingleGoodsListViewModel extends SingleGoodsListViewModelEx {
     private Handler handler = new Handler(Looper.getMainLooper());
 
     public MutableLiveData<List<Goods>> goodsList = new MutableLiveData<>();
+
+    public MutableLiveData<ListHead> head = new MutableLiveData<>();
+
+    public MutableLiveData<String> foot = new MutableLiveData<>();
 
     public void getGoodsList() {
         new Thread(new Runnable() {
@@ -54,6 +59,12 @@ public class SingleGoodsListViewModel extends SingleGoodsListViewModelEx {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        ListHead listHead = new ListHead();
+                        listHead.head = "head";
+                        head.setValue(listHead);
+
+                        foot.setValue("foot");
+
                         goodsList.setValue(list);
                     }
                 }, 1000);

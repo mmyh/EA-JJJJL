@@ -3,14 +3,12 @@ package com.mmyh.eajjjjl.compiler.annotationhandler;
 
 import com.mmyh.eajjjjl.annotation.EAView;
 import com.mmyh.eajjjjl.compiler.EAUtil;
-import com.mmyh.eajjjjl.compiler.EAWidgetInfo;
 import com.mmyh.eajjjjl.compiler.model.EAViewInfo;
 
 import java.util.List;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.MirroredTypesException;
 import javax.lang.model.type.TypeMirror;
@@ -83,42 +81,20 @@ public class EAViewParentAnnotationHandler extends EABaseAnnotationHandler {
                 viewInfo.superClass = e.getTypeMirror();
             }
         }
-        String binding = typeElement.getQualifiedName().toString().replace(typeElement.getSimpleName().toString(), "bindingdata." + typeElement.getSimpleName().toString() + "BindingData");
-        TypeElement bd = eaUtil.elementUtils.getTypeElement(binding);
-        parseBindingDataFile(bd, viewInfo);
-    }
-
-    private void parseBindingDataFile(TypeElement bd, EAViewInfo viewInfo) {
-        if (bd == null) {
-            return;
+        try {
+            Class<?> cls = eaView.headViewModel();
+        } catch (MirroredTypeException e) {
+            if (!Object.class.getCanonicalName().equals(e.getTypeMirror().toString())) {
+                viewInfo.headViewModel = e.getTypeMirror();
+            }
         }
-        for (Element element : bd.getEnclosedElements()) {
-            if (element instanceof TypeElement) {
-                TypeElement typeElement = (TypeElement) element;
-                String bindingName = typeElement.getSimpleName().toString();
-                for (String binding : viewInfo.bindingsString) {
-                    if (binding.contains(bindingName)) {
-                        for (Element field : typeElement.getEnclosedElements()) {
-                            if (field instanceof VariableElement) {
-                                VariableElement widget = (VariableElement) field;
-                                EAWidgetInfo widgetInfo = new EAWidgetInfo();
-                                widgetInfo.id = widget.getSimpleName().toString();
-                                widgetInfo.widgetType = widget.asType().toString();
-                                widgetInfo.binding = binding;
-                                widgetInfo.initAnnotation(widget);
-                                viewInfo.widgetsList.add(widgetInfo);
-                            }
-                        }
-                        break;
-                    }
-                }
-                if (typeElement.getSimpleName().toString().endsWith("HeadViewData")) {
-                    viewInfo.headViewModel = typeElement.asType();
-                }
-                if (typeElement.getSimpleName().toString().endsWith("FootViewData")) {
-                    viewInfo.footViewModel = typeElement.asType();
-                }
+        try {
+            Class<?> cls = eaView.footViewModel();
+        } catch (MirroredTypeException e) {
+            if (!Object.class.getCanonicalName().equals(e.getTypeMirror().toString())) {
+                viewInfo.footViewModel = e.getTypeMirror();
             }
         }
     }
+
 }

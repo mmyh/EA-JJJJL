@@ -21,6 +21,10 @@ public @interface EAView {
 
     Class<?> headViewBinding() default Object.class;
 
+    Class<?> headViewModel() default Object.class;
+
     Class<?> footViewBinding() default Object.class;
+
+    Class<?> footViewModel() default Object.class;
 
 }

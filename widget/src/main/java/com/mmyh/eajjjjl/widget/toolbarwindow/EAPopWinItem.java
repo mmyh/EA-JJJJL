@@ -14,4 +14,6 @@ public class EAPopWinItem {
     public String navDestinationClassName;
 
     public boolean isStartDestination;
+
+    public String name;
 }

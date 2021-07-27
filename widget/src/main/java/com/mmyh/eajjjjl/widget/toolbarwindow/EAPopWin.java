@@ -2,6 +2,7 @@ package com.mmyh.eajjjjl.widget.toolbarwindow;
 
 import android.app.Activity;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,8 @@ public class EAPopWin {
 
     NavController mController;
 
+    OnEAPopWinItemClickListener mOnEAPopWinItemClickListener;
+
     private EAPopWin(Builder builder) {
         mPop = createPop(builder);
         initNavController(builder);
@@ -49,7 +52,11 @@ public class EAPopWin {
                 @Override
                 public void onClick(View v) {
                     mPop.dismiss();
-                    mController.navigate(item.navDestinationId);
+                    if (builder.onEAPopWinItemClickListener != null) {
+                        mController.navigate(item.navDestinationId, builder.onEAPopWinItemClickListener.getBundle());
+                    } else {
+                        mController.navigate(item.navDestinationId);
+                    }
                 }
             });
             itemContainer.addView(item.view, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -102,6 +109,16 @@ public class EAPopWin {
         mController.setGraph(navGraph);
     }
 
+    public NavController getNavController() {
+        return mController;
+    }
+
+    public void reClickItem(Bundle bundle) {
+        if (mController.getCurrentDestination() != null) {
+            mController.navigate(mController.getCurrentDestination().getId(), bundle);
+        }
+    }
+
     public static final class Builder {
 
         private int animStyle;
@@ -115,6 +132,8 @@ public class EAPopWin {
         private List<EAPopWinItem> items;
 
         private int navHostFragmentId;
+
+        private OnEAPopWinItemClickListener onEAPopWinItemClickListener;
 
         public Builder(Activity activity, int navHostFragmentId, List<EAPopWinItem> items) {
             this.activity = activity;
@@ -137,8 +156,19 @@ public class EAPopWin {
             return this;
         }
 
+        public Builder setEAPopWinItemClickListener(OnEAPopWinItemClickListener listener) {
+            this.onEAPopWinItemClickListener = listener;
+            return this;
+        }
+
         public EAPopWin build() {
             return new EAPopWin(this);
         }
+    }
+
+    public interface OnEAPopWinItemClickListener {
+
+        public Bundle getBundle();
+
     }
 }

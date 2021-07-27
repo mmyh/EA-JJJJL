@@ -53,7 +53,8 @@ public class EAPopWin {
                 public void onClick(View v) {
                     mPop.dismiss();
                     if (builder.onEAPopWinItemClickListener != null) {
-                        mController.navigate(item.navDestinationId, builder.onEAPopWinItemClickListener.getBundle());
+                        builder.onEAPopWinItemClickListener.onItemClick(item);
+                        mController.navigate(item.navDestinationId, builder.onEAPopWinItemClickListener.getBundle(item));
                     } else {
                         mController.navigate(item.navDestinationId);
                     }
@@ -113,7 +114,7 @@ public class EAPopWin {
         return mController;
     }
 
-    public void reClickItem(Bundle bundle) {
+    public void clickItem(Bundle bundle) {
         if (mController.getCurrentDestination() != null) {
             mController.navigate(mController.getCurrentDestination().getId(), bundle);
         }
@@ -168,7 +169,13 @@ public class EAPopWin {
 
     public interface OnEAPopWinItemClickListener {
 
-        public Bundle getBundle();
+        public default Bundle getBundle(EAPopWinItem item) {
+            return null;
+        }
+
+        public default void onItemClick(EAPopWinItem item) {
+
+        }
 
     }
 }

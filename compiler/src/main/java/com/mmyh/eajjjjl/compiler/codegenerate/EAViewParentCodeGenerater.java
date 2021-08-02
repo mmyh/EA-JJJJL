@@ -78,7 +78,7 @@ public class EAViewParentCodeGenerater extends EABaseCodeGenerater {
         if (element instanceof TypeElement) {
             TypeElement typeElement = (TypeElement) element;
             String name = typeElement.getQualifiedName().toString();
-            if (EAUtil.equals(name, EAConstant.c_ViewGroup) || EAUtil.equals(name, EAConstant.c_View)) {
+            if (eaUtil.equals(name, EAConstant.c_ViewGroup) || eaUtil.equals(name, EAConstant.c_View)) {
                 return true;
             } else {
                 return checkSuperClassIsView(typeElement.getSuperclass());

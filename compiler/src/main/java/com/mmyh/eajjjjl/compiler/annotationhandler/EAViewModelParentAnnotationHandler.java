@@ -35,12 +35,25 @@ public class EAViewModelParentAnnotationHandler extends EABaseAnnotationHandler 
         EAApi eaApi = data.getAnnotation(EAApi.class);
         EAApiInfo apiInfo = new EAApiInfo();
         apiInfo.controlLoadingDialog = eaApi.controlLoadingDialog();
-        String[] apitmp = eaApi.api().split(",");
-        apiInfo.apiClass = apitmp[0];
-        apiInfo.apiMethod = apitmp[1];
-        TypeElement apiElement = eaUtil.elementUtils.getTypeElement(apitmp[0]);
+        try {
+            eaApi.apiClass();
+        } catch (MirroredTypeException e) {
+            TypeMirror typeMirror = e.getTypeMirror();
+            if (!eaUtil.equals(typeMirror.toString(), Object.class.getCanonicalName())) {
+                apiInfo.apiClass = typeMirror.toString();
+            }
+        }
+        apiInfo.apiMethod = eaApi.apiMethod();
+        if (eaUtil.isEmptyStr(apiInfo.apiClass) || eaUtil.isEmptyStr(apiInfo.apiMethod)) {
+            String[] apitmp = eaApi.api().split(",");
+            apiInfo.apiClass = apitmp[0];
+            apiInfo.apiMethod = apitmp[1];
+        }
+        boolean findApi = false;
+        TypeElement apiElement = eaUtil.elementUtils.getTypeElement(apiInfo.apiClass);
         for (Element element : apiElement.getEnclosedElements()) {
             if (element instanceof ExecutableElement && element.getSimpleName().toString().equals(apiInfo.apiMethod)) {
+                findApi = true;
                 TypeMirror returnType = ((ExecutableElement) element).getReturnType();
                 if (returnType.toString().contains("retrofit2.Call")) {
                     ParameterizedTypeName parameterizedTypeName = (ParameterizedTypeName) ClassName.get(returnType);
@@ -50,6 +63,9 @@ public class EAViewModelParentAnnotationHandler extends EABaseAnnotationHandler 
                 }
                 break;
             }
+        }
+        if (!findApi) {
+            eaUtil.printError("没有找到(" + apiInfo.apiClass + ":" + apiInfo.apiMethod + ")");
         }
         try {
             eaApi.request();

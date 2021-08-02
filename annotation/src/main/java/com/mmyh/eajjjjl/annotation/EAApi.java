@@ -9,7 +9,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 public @interface EAApi {
 
-    String api();
+    @Deprecated
+    String api() default "";
+
+    Class<?> apiClass() default Object.class;
+
+    String apiMethod() default "";
 
     Class<?> request();
 

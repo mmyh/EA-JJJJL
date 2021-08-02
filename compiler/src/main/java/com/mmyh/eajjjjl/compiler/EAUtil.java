@@ -47,7 +47,7 @@ public class EAUtil {
         return null == string || string.length() == 0;
     }
 
-    public static boolean equals(CharSequence a, CharSequence b) {
+    public boolean equals(CharSequence a, CharSequence b) {
         if (a == b) return true;
         int length;
         if (a != null && b != null && (length = a.length()) == b.length()) {

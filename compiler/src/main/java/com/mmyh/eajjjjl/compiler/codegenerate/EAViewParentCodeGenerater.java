@@ -179,7 +179,7 @@ public class EAViewParentCodeGenerater extends EABaseCodeGenerater {
                             ParameterizedTypeName parameterizedTypeName = (ParameterizedTypeName) ClassName.get(ve.asType());
                             modelName = parameterizedTypeName.typeArguments.get(0);
                         }
-                        if (annotation != null) {
+                        if (annotation != null && !eaUtil.isEmptyStr(annotation.apiMethod())) {
                             String apiDataClassName = eaUtil.firstToUpperCase(annotation.apiMethod()) + "Data";
                             if (eaUtil.equals(Object.class.getCanonicalName(), modelName.toString())
                                     || eaUtil.equals(apiDataClassName, modelName.toString())) {

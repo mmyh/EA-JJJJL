@@ -4,17 +4,22 @@ import android.os.Handler;
 import android.os.Looper;
 
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 
+import com.mmyh.eajjjjl.annotation.EAApi;
+import com.mmyh.eajjjjl.annotation.EAViewModel;
+import com.mmyh.eajjjjl.demo.Api;
+import com.mmyh.eajjjjl.demo.TestRequest;
 import com.mmyh.eajjjjl.demo.model.Goods;
 import com.mmyh.eajjjjl.demo.model.ListHead;
 import com.mmyh.eajjjjl.demo.model.Shop;
-import com.mmyh.eajjjjl.demo.viewmodel.ex.SingleGoodsListViewModelEx;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SingleGoodsListViewModel extends SingleGoodsListViewModelEx {
+@EAViewModel(superClass = ViewModel.class)
+public class SingleGoodsListViewModel extends SingleGoodsListViewModelParent {
 
 
     private Handler handler = new Handler(Looper.getMainLooper());
@@ -24,6 +29,9 @@ public class SingleGoodsListViewModel extends SingleGoodsListViewModelEx {
     public MutableLiveData<ListHead> head = new MutableLiveData<>();
 
     public MutableLiveData<String> foot = new MutableLiveData<>();
+
+    @EAApi(apiClass = Api.class, apiMethod = "test", request = TestRequest.class)
+    public MutableLiveData<TestData> test = new MutableLiveData();
 
     public void getGoodsList() {
         new Thread(new Runnable() {
@@ -66,6 +74,11 @@ public class SingleGoodsListViewModel extends SingleGoodsListViewModelEx {
             }
         }).start();
 
+
+    }
+
+    @Override
+    protected void testFinish(TestData data) {
 
     }
 }

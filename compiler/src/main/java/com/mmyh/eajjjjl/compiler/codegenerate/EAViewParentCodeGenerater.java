@@ -1,5 +1,6 @@
 package com.mmyh.eajjjjl.compiler.codegenerate;
 
+import com.mmyh.eajjjjl.annotation.EAApi;
 import com.mmyh.eajjjjl.annotation.EAParent;
 import com.mmyh.eajjjjl.compiler.EAConstant;
 import com.mmyh.eajjjjl.compiler.EAUtil;
@@ -170,9 +171,23 @@ public class EAViewParentCodeGenerater extends EABaseCodeGenerater {
                 if (child instanceof VariableElement) {
                     VariableElement ve = (VariableElement) child;
                     if (ve.asType().toString().contains("MutableLiveData")) {
+                        EAApi annotation = ve.getAnnotation(EAApi.class);
                         String veName = ve.getSimpleName().toString();
-                        ParameterizedTypeName parameterizedTypeName = (ParameterizedTypeName) ClassName.get(ve.asType());
-                        TypeName modelName = parameterizedTypeName.typeArguments.get(0);
+
+                        TypeName modelName = getCN(Object.class.getCanonicalName());
+                        if (ClassName.get(ve.asType()) instanceof ParameterizedTypeName) {
+                            ParameterizedTypeName parameterizedTypeName = (ParameterizedTypeName) ClassName.get(ve.asType());
+                            modelName = parameterizedTypeName.typeArguments.get(0);
+                        }
+                        if (annotation != null) {
+                            String apiDataClassName = eaUtil.firstToUpperCase(annotation.apiMethod()) + "Data";
+                            if (eaUtil.equals(Object.class.getCanonicalName(), modelName.toString())
+                                    || eaUtil.equals(apiDataClassName, modelName.toString())) {
+                                String packageFullName = eaUtil.elementUtils.getPackageOf(viewModel).getQualifiedName().toString();
+                                String viewModelParentName = typeMirror.toString().substring(typeMirror.toString().lastIndexOf(".") + 1) + "Parent";
+                                modelName = getCN(packageFullName + "." + viewModelParentName + "." + apiDataClassName);
+                            }
+                        }
                         String observerFieldName = viewModelSimpleName + eaUtil.firstToUpperCase(veName);
                         tsBuilder.addField(
                                 FieldSpec.builder(ParameterizedTypeName.get(getCN(EAConstant.OBSERVER), modelName), observerFieldName, Modifier.PROTECTED)

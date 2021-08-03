@@ -4,15 +4,12 @@ import android.os.Handler;
 import android.os.Looper;
 
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
-import com.mmyh.eajjjjl.annotation.EAViewModelEx;
 import com.mmyh.eajjjjl.demo.model.Goods;
 import com.mmyh.eajjjjl.demo.model.Shop;
 import com.mmyh.eajjjjl.demo.viewmodel.ex.GoodsDetailViewModelEx;
 
 
-@EAViewModelEx(superClass = ViewModel.class)
 public class GoodsDetailViewModel extends GoodsDetailViewModelEx {
 
 

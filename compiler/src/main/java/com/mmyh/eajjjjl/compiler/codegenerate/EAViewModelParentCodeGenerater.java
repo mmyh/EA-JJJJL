@@ -1,9 +1,10 @@
 package com.mmyh.eajjjjl.compiler.codegenerate;
 
-import com.mmyh.eajjjjl.annotation.EAViewModelEx;
+import com.mmyh.eajjjjl.annotation.EAViewModel;
 import com.mmyh.eajjjjl.compiler.EAConstant;
 import com.mmyh.eajjjjl.compiler.EAUtil;
 import com.mmyh.eajjjjl.compiler.model.EAApiInfo;
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
@@ -28,11 +29,12 @@ public class EAViewModelParentCodeGenerater extends EABaseCodeGenerater {
             return;
         }
         String packageFullName = eaUtil.elementUtils.getPackageOf(typeElement).getQualifiedName().toString();
-        TypeSpec.Builder tsBuilder = TypeSpec.classBuilder(viewModelName.substring(viewModelName.lastIndexOf(".") + 1) + "Parent")
+        String viewModelParentName = viewModelName.substring(viewModelName.lastIndexOf(".") + 1) + "Parent";
+        TypeSpec.Builder tsBuilder = TypeSpec.classBuilder(viewModelParentName)
                 .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT);
-        if (typeElement.getAnnotation(EAViewModelEx.class) != null) {
+        if (typeElement.getAnnotation(EAViewModel.class) != null) {
             try {
-                typeElement.getAnnotation(EAViewModelEx.class).superClass();
+                typeElement.getAnnotation(EAViewModel.class).superClass();
             } catch (MirroredTypeException e) {
                 if (!e.getTypeMirror().toString().equals(Object.class.getCanonicalName())) {
                     tsBuilder.superclass(TypeName.get(e.getTypeMirror()));
@@ -41,6 +43,8 @@ public class EAViewModelParentCodeGenerater extends EABaseCodeGenerater {
         }
         List<EAApiInfo> apiList = apiMap.get(viewModelName);
         for (EAApiInfo apiInfo : apiList) {
+            String apiDataClassName = createApiDataClass(tsBuilder, apiInfo);
+            ClassName apiDataClass = getCN(packageFullName + "." + viewModelParentName + "." + apiDataClassName);
             MethodSpec.Builder apiMethod = MethodSpec.methodBuilder(apiInfo.apiMethod)
                     .returns(void.class)
                     .addModifiers(Modifier.PUBLIC);
@@ -66,8 +70,7 @@ public class EAViewModelParentCodeGenerater extends EABaseCodeGenerater {
             apiMethod.addCode("$N.enqueue(new $T<$T>() {\n", EAConstant.str_eaCall, getCN(apiInfo.callBack), apiInfo.returnType);
             apiMethod.addCode("@Override\n");
             apiMethod.addCode("protected void onFinish($T $N, $T $N) {\n", apiInfo.returnType, EAConstant.str_response, getCN(EAConstant.c_Throwable), EAConstant.str_err);
-            String apiData = packageFullName + ".ex." + typeElement.getSimpleName().toString() + "Ex." + eaUtil.firstToUpperCase(apiInfo.apiMethod) + "Data";
-            apiMethod.addStatement("$T $N = new $T()", getCN(apiData), EAConstant.str_data, getCN(apiData));
+            apiMethod.addStatement("$T $N = new $T()", apiDataClass, EAConstant.str_data, apiDataClass);
             apiMethod.addCode("if($N==null){\n", EAConstant.str_response);
             apiMethod.addStatement("$N = new $T()", EAConstant.str_response, apiInfo.returnType);
             apiMethod.addCode("}\n");
@@ -85,7 +88,7 @@ public class EAViewModelParentCodeGenerater extends EABaseCodeGenerater {
             MethodSpec.Builder apiFinishMethod = MethodSpec.methodBuilder(apiFinishMethodName)
                     .returns(void.class)
                     .addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT);
-            apiFinishMethod.addParameter(getCN(apiData), EAConstant.str_data);
+            apiFinishMethod.addParameter(apiDataClass, EAConstant.str_data);
             tsBuilder.addMethod(apiFinishMethod.build());
 //            ParameterizedTypeName responseTN = ParameterizedTypeName.get(getCN(class_MutableLiveData), apiInfo.returnType);
 //            FieldSpec.Builder res = FieldSpec.builder(responseTN, apiInfo.apiMethod + str_Response, Modifier.PUBLIC)
@@ -105,5 +108,20 @@ public class EAViewModelParentCodeGenerater extends EABaseCodeGenerater {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private String createApiDataClass(TypeSpec.Builder tsBuilder, EAApiInfo apiInfo) {
+        String name = eaUtil.firstToUpperCase(apiInfo.apiMethod) + "Data";
+        TypeSpec.Builder tb = TypeSpec.classBuilder(name)
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
+        tb.addField(Throwable.class, EAConstant.str_err, Modifier.PUBLIC);
+        tb.addField(apiInfo.returnType, EAConstant.str_response, Modifier.PUBLIC);
+        int i = 1;
+        for (String str : apiInfo.paramsClassName) {
+            tb.addField(getCN(str), "p" + i, Modifier.PUBLIC);
+            i++;
+        }
+        tsBuilder.addType(tb.build());
+        return name;
     }
 }

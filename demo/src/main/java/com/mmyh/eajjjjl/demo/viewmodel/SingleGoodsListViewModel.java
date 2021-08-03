@@ -4,12 +4,8 @@ import android.os.Handler;
 import android.os.Looper;
 
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 
-import com.mmyh.eajjjjl.annotation.EAApi;
-import com.mmyh.eajjjjl.annotation.EAViewModelEx;
-import com.mmyh.eajjjjl.demo.TestCallback;
 import com.mmyh.eajjjjl.demo.model.Goods;
 import com.mmyh.eajjjjl.demo.model.ListHead;
 import com.mmyh.eajjjjl.demo.model.Shop;
@@ -18,7 +14,6 @@ import com.mmyh.eajjjjl.demo.viewmodel.ex.SingleGoodsListViewModelEx;
 import java.util.ArrayList;
 import java.util.List;
 
-@EAViewModelEx(superClass = ViewModel.class)
 public class SingleGoodsListViewModel extends SingleGoodsListViewModelEx {
 
 

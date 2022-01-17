@@ -120,7 +120,7 @@ public class EARefreshListView extends ConstraintLayout implements NestedScrolli
         mRecyclerView.post(new Runnable() {
             @Override
             public void run() {
-                mRecyclerView.setPadding(getPaddingLeft(), getPaddingTop(), getPaddingRight(), getPaddingBottom());
+                //mRecyclerView.setPadding(getPaddingLeft(), getPaddingTop(), getPaddingRight(), getPaddingBottom());
                 if (mRefreshView != null) {
                     mRefreshViewHeight = ((View) mRefreshView).getHeight();
                 }

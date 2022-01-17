@@ -59,6 +59,16 @@ public class SingleGoodsListViewModel extends SingleGoodsListViewModelParent {
                 g3.name = "cccc";
                 g3.price = "847.98";
                 list.add(g3);
+
+                Goods g4 = new Goods();
+                g4.name = "cccc";
+                g4.price = "847.98";
+                list.add(g4);
+
+                Goods g5 = new Goods();
+                g5.name = "eee";
+                g5.price = "111";
+                list.add(g5);
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {

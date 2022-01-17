@@ -92,6 +92,11 @@ public class EARefreshListView extends ConstraintLayout implements NestedScrolli
         EARefreshListViewConfig config = getConfig();
         mRefreshDistance = config.getRefreshDistance(getContext());
 
+        ConstraintLayout.LayoutParams clp = new Constraints.LayoutParams(LayoutParams.MATCH_PARENT, 0);
+        clp.topToTop = LayoutParams.PARENT_ID;
+        clp.bottomToBottom = LayoutParams.PARENT_ID;
+        addView(mRecyclerView, clp);
+
         if (!config.usesSwipeRefreshLayout()) {
             mRefreshView = config.getRefreshView(getContext());
             final View refreshView = (View) mRefreshView;
@@ -99,7 +104,7 @@ public class EARefreshListView extends ConstraintLayout implements NestedScrolli
                 refreshView.setId(ViewCompat.generateViewId());
             }
             ConstraintLayout.LayoutParams rvlp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-            rvlp.topToTop = LayoutParams.PARENT_ID;
+            rvlp.bottomToTop = mRecyclerView.getId();
             addView(refreshView, rvlp);
         }
 
@@ -109,17 +114,8 @@ public class EARefreshListView extends ConstraintLayout implements NestedScrolli
             loadMoreView.setId(ViewCompat.generateViewId());
         }
         ConstraintLayout.LayoutParams lvlp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        lvlp.bottomToBottom = LayoutParams.PARENT_ID;
+        lvlp.topToBottom = mRecyclerView.getId();
         addView(loadMoreView, lvlp);
-
-        ConstraintLayout.LayoutParams clp = new Constraints.LayoutParams(LayoutParams.MATCH_PARENT, 0);
-        if (mRefreshView != null) {
-            clp.topToBottom = ((View) mRefreshView).getId();
-        } else {
-            clp.topToTop = LayoutParams.PARENT_ID;
-        }
-        clp.bottomToTop = loadMoreView.getId();
-        addView(mRecyclerView, clp);
 
         mRecyclerView.post(new Runnable() {
             @Override
@@ -129,7 +125,7 @@ public class EARefreshListView extends ConstraintLayout implements NestedScrolli
                     mRefreshViewHeight = ((View) mRefreshView).getHeight();
                 }
                 mLoadMoreHeight = loadMoreView.getHeight();
-                setPadding(0, -mRefreshViewHeight, 0, -mLoadMoreHeight);
+                //setPadding(0, -mRefreshViewHeight, 0, -mLoadMoreHeight);
                 loadMoreView.setVisibility(INVISIBLE);
             }
         });

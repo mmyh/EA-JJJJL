@@ -37,8 +37,8 @@ public class SingleGoodsListActivity extends SingleGoodsListActivityParent {
         super.onCreate(savedInstanceState);
         EAMvvm.work(this);
         setContentView(actSingleGoodsListBinding.getRoot());
-        recyclerview.setLayoutManager(new LinearLayoutManager(this));
-        recyclerview.setAdapter(mAdapter);
+        //recyclerview.setLayoutManager(new LinearLayoutManager(this));
+        listview.setAdapter(mAdapter);
         getSingleGoodsListViewModel().getGoodsList();
     }
 

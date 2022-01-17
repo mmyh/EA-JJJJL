@@ -50,4 +50,5 @@ dependencies {
     api 'org.ligboy.retrofit2:converter-fastjson-android:2.1.0'
     api 'androidx.navigation:navigation-fragment:2.0.0'
     api 'androidx.navigation:navigation-ui:2.0.0'
+    api 'androidx.constraintlayout:constraintlayout:2.0.4'
 }

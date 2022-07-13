@@ -99,6 +99,7 @@ public class EAAutoScrollBanner extends RelativeLayout {
             }
         });
         mHandler = new SafeHandler(this);
+        //System.out.println("test");
     }
 
     public void setBannerData(List<? extends EAIBanner> data, ViewPager.OnPageChangeListener listener) {

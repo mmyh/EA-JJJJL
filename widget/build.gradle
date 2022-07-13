@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-group='com.mmyh.eajjjjl'
+//apply plugin: 'com.github.dcendents.android-maven'
+//group='com.mmyh.eajjjjl'
 
 android {
     compileSdkVersion 30
@@ -37,4 +37,16 @@ dependencies {
     compileOnly 'androidx.lifecycle:lifecycle-common-java8:2.0.0'
     compileOnly 'androidx.navigation:navigation-fragment:2.0.0'
     compileOnly 'androidx.navigation:navigation-ui:2.0.0'
+    compileOnly "androidx.core:core-ktx:$core_ktx"
+    compileOnly "androidx.activity:activity-compose:$activity_compose"
+    compileOnly "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_runtime_ktx"
+    compileOnly "androidx.compose.material:material:$compose_version"
+    compileOnly "androidx.compose.animation:animation:$compose_version"
+    compileOnly "androidx.compose.ui:ui-tooling:$compose_version"
+    compileOnly "androidx.compose.ui:ui-tooling-preview:$compose_version"
+    compileOnly "androidx.compose.ui:ui:$compose_version"
+    compileOnly "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_viewmodel_compose"
+    compileOnly "androidx.navigation:navigation-compose:$navigation_compose"
+    compileOnly "androidx.compose.runtime:runtime-livedata:$compose_version"
+    compileOnly "com.google.accompanist:accompanist-swiperefresh:$swiperefresh"
 }

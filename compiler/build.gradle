@@ -22,9 +22,9 @@ publishing {
         // MavenPublication必须有，这个是调用的任务类
         mavenJava(MavenPublication) {
             // 这里头是artifacts的配置信息，不填会采用默认的
-//            groupId = 'org.gradle.sample'
-//            artifactId = 'library'
-//            version = '1.1'
+            groupId = 'com.mmyh.eajjjjl'
+            artifactId = 'compiler'
+            version = '2.3.0'
 
             from components.java
         }

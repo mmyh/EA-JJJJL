@@ -20,6 +20,14 @@
     <bytecodeTargetLevel target="1.8">
       <module name="annotation" target="1.7" />
       <module name="compiler" target="1.7" />
+      <module name="EAJJJJL.app" target="11" />
+      <module name="EAJJJJL.demo" target="11" />
+      <module name="EAJJJJL.demo1" target="11" />
+      <module name="EAJJJJL.listhelper" target="11" />
+      <module name="EAJJJJL.mvvm" target="11" />
+      <module name="EAJJJJL.retrofitextension" target="11" />
+      <module name="EAJJJJL.router" target="11" />
+      <module name="EAJJJJL.widget" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

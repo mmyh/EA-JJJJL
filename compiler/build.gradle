@@ -1,14 +1,12 @@
 apply plugin: 'java-library'
 apply plugin: 'maven-publish'
-//apply plugin: 'com.github.dcendents.android-maven'
-//group='com.mmyh.eajjjjl'
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     compileOnly 'com.google.auto.service:auto-service:1.0-rc4'
     implementation project(':annotation')
     implementation 'com.squareup:javapoet:1.9.0'
-    annotationProcessor'com.google.auto.service:auto-service:1.0-rc4'
+    annotationProcessor 'com.google.auto.service:auto-service:1.0-rc4'
     implementation 'com.github.javaparser:javaparser-symbol-solver-core:3.20.2'
     implementation 'com.github.javaparser:javaparser-core-serialization:3.20.2'
 }
@@ -19,14 +17,10 @@ targetCompatibility = "8"
 afterEvaluate {
     publishing {
         publications {
-            // 这个mavenJava可以随便填，只是一个任务名字而已
-            // MavenPublication必须有，这个是调用的任务类
-            mavenJava(MavenPublication) {
-                // 这里头是artifacts的配置信息，不填会采用默认的
-                groupId = 'com.github.mmyh.EA-JJJJL'
+            mavenPublish(MavenPublication) {
+                groupId = rootProject.ext.groupId
                 artifactId = 'compiler'
-                version = '2.3.0'
-
+                version = rootProject.ext.version
                 from components.java
             }
         }

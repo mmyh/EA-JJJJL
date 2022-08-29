@@ -1,4 +1,4 @@
-package com.mmyh.eajjjjl.widget
+package com.mmyh.eajjjjl.widget.composelist
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -31,15 +31,17 @@ fun <T> SwipeRefreshLoadMore(
         SwipeRefreshIndicator(
             s,
             trigger,
-            backgroundColor = Color.White
+            backgroundColor = Color.White,
+            contentColor = Color.Black
         )
     },
     clipIndicatorToPadding: Boolean = true,
     itemDecoration: Dp = 10.dp,
-    loadMoreContent: @Composable (LazyItemScope.() -> Unit)? = null,
-    emptyContent: @Composable (modifier: Modifier) -> Unit = {
-    },
     swipeRefreshLoadMoreState: SwipeRefreshLoadMoreState<T>,
+    loadMoreContent: @Composable (LazyItemScope.() -> Unit)? = null,
+    emptyContent: @Composable (modifier: Modifier) -> Unit = {},
+    headContent: @Composable (() -> Unit)? = null,
+    footContent: @Composable (() -> Unit)? = null,
     renderItem: @Composable (index: Int, t: T) -> Unit
 ) {
     SwipeRefresh(
@@ -59,6 +61,11 @@ fun <T> SwipeRefreshLoadMore(
         val scrollState = rememberLazyListState()
         LazyColumn(state = scrollState) {
             swipeRefreshLoadMoreState.refresh(false)
+            if (headContent != null) {
+                item {
+                    headContent()
+                }
+            }
             if (swipeRefreshLoadMoreState.data.size == 0 && swipeRefreshLoadMoreState.dataSetted) {
                 item {
                     emptyContent(
@@ -112,6 +119,12 @@ fun <T> SwipeRefreshLoadMore(
                             swipeRefreshLoadMoreState.loadMore()
                         }
                     }
+                } else {
+                    if (footContent != null) {
+                        item {
+                            footContent()
+                        }
+                    }
                 }
             }
         }
@@ -142,6 +155,10 @@ class SwipeRefreshLoadMoreState<T>(
     internal val swipeRefreshState: SwipeRefreshState = SwipeRefreshState(false)
 
     internal var dataSetted = false
+
+    fun getData(): MutableList<T> {
+        return data
+    }
 
     fun setData(listResponse: IPageRes<T>?) {
         dataSetted = true

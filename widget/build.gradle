@@ -1,14 +1,13 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
-//apply plugin: 'com.github.dcendents.android-maven'
-//group='com.mmyh.eajjjjl'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.1"
+    compileSdkVersion 31
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -30,6 +29,13 @@ android {
     lintOptions {
         abortOnError false
     }
+    buildFeatures {
+        // Enables Jetpack Compose for this module
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion compose_version
+    }
 }
 
 dependencies {
@@ -41,31 +47,28 @@ dependencies {
     compileOnly 'androidx.lifecycle:lifecycle-common-java8:2.0.0'
     compileOnly 'androidx.navigation:navigation-fragment:2.0.0'
     compileOnly 'androidx.navigation:navigation-ui:2.0.0'
-    compileOnly "androidx.core:core-ktx:$core_ktx"
-    compileOnly "androidx.activity:activity-compose:$activity_compose"
-    compileOnly "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_runtime_ktx"
-    compileOnly "androidx.compose.material:material:$compose_version"
-    compileOnly "androidx.compose.animation:animation:$compose_version"
-    compileOnly "androidx.compose.ui:ui-tooling:$compose_version"
-    compileOnly "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    compileOnly "androidx.compose.ui:ui:$compose_version"
-    compileOnly "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_viewmodel_compose"
-    compileOnly "androidx.navigation:navigation-compose:$navigation_compose"
-    compileOnly "androidx.compose.runtime:runtime-livedata:$compose_version"
-    compileOnly "com.google.accompanist:accompanist-swiperefresh:$swiperefresh"
+
+    implementation "androidx.core:core-ktx:$core_ktx"
+    implementation "androidx.activity:activity-compose:$activity_compose"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_runtime_ktx"
+    implementation "androidx.compose.material:material:$compose_version"
+    implementation "androidx.compose.animation:animation:$compose_version"
+    implementation "androidx.compose.ui:ui-tooling:$compose_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_viewmodel_compose"
+    implementation "androidx.navigation:navigation-compose:$navigation_compose"
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+    implementation "com.google.accompanist:accompanist-swiperefresh:$swiperefresh"
 }
 
 afterEvaluate {
     publishing {
         publications {
-            // 这个mavenJava可以随便填，只是一个任务名字而已
-            // MavenPublication必须有，这个是调用的任务类
-            mavenJava(MavenPublication) {
-                // 这里头是artifacts的配置信息，不填会采用默认的
-                groupId = 'com.github.mmyh.EA-JJJJL'
+            mavenPublish(MavenPublication) {
+                groupId = rootProject.ext.groupId
                 artifactId = 'widget'
-                version = '2.3.0'
-
+                version = rootProject.ext.version
                 from components.release
             }
         }

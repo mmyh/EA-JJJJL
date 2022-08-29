@@ -1,11 +1,12 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.1"
+    compileSdkVersion 31
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -30,6 +31,13 @@ android {
     lintOptions {
         abortOnError false
     }
+    buildFeatures {
+        // Enables Jetpack Compose for this module
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion compose_version
+    }
 }
 
 dependencies {
@@ -40,7 +48,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     def lifecycle_version = "2.0.0"
-    annotationProcessor project(':compiler')
+    kapt project(':compiler')
     implementation project(':mvvm')
     implementation project(':annotation')
     implementation project(':router')
@@ -54,4 +62,17 @@ dependencies {
     api 'androidx.navigation:navigation-fragment:2.0.0'
     api 'androidx.navigation:navigation-ui:2.0.0'
     api 'androidx.constraintlayout:constraintlayout:2.0.4'
+
+    api "androidx.core:core-ktx:$core_ktx"
+    api "androidx.activity:activity-compose:$activity_compose"
+    api "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_runtime_ktx"
+    api "androidx.compose.material:material:$compose_version"
+    api "androidx.compose.animation:animation:$compose_version"
+    api "androidx.compose.ui:ui-tooling:$compose_version"
+    api "androidx.compose.ui:ui-tooling-preview:$compose_version"
+    api "androidx.compose.ui:ui:$compose_version"
+    api "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_viewmodel_compose"
+    api "androidx.navigation:navigation-compose:$navigation_compose"
+    api "androidx.compose.runtime:runtime-livedata:$compose_version"
+    api "com.google.accompanist:accompanist-swiperefresh:$swiperefresh"
 }

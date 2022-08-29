@@ -11,5 +11,7 @@
         <activity android:name=".view.GoodsDetailActivity" />
 
         <activity android:name=".menunavigation.MenuActivity"/>
+
+        <activity android:name=".composelist.ComposeList"/>
     </application>
 </manifest>

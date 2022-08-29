@@ -45,3 +45,8 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+ext {
+    groupId = "com.github.mmyh.EA-JJJJL"
+    version = "2.3.1"
+}

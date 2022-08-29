@@ -7,3 +7,16 @@ dependencies {
 
 sourceCompatibility = "8"
 targetCompatibility = "8"
+
+afterEvaluate {
+    publishing {
+        publications {
+            mavenPublish(MavenPublication) {
+                groupId = rootProject.ext.groupId
+                artifactId = 'annotation'
+                version = rootProject.ext.version
+                from components.java
+            }
+        }
+    }
+}

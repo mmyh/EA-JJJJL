@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import com.mmyh.eajjjjl.demo.composelist.ComposeList;
 import com.mmyh.eajjjjl.demo.fragmentandviewmodel.TestViewModelActivity;
 import com.mmyh.eajjjjl.demo.menunavigation.MenuActivity;
 import com.mmyh.eajjjjl.demo.view.SingleGoodsListActivity;
@@ -63,6 +64,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, MenuActivity.class));
+            }
+        });
+        binding.btn7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ComposeList.class));
             }
         });
     }

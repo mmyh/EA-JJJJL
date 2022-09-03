@@ -31,3 +31,16 @@ dependencies {
     implementation project(':annotation')
 
 }
+
+afterEvaluate {
+    publishing {
+        publications {
+            mavenPublish(MavenPublication) {
+                groupId = rootProject.ext.groupId
+                artifactId = 'router'
+                version = rootProject.ext.version
+                from components.release
+            }
+        }
+    }
+}

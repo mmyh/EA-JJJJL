@@ -17,6 +17,7 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.ArrayList
 
@@ -59,6 +60,24 @@ fun <T> SwipeRefreshLoadMore(
     ) {
         val composableScope = rememberCoroutineScope()
         val scrollState = rememberLazyListState()
+        val isReachedBottom by remember {
+            derivedStateOf {
+                (scrollState.firstVisibleItemIndex + scrollState.layoutInfo.visibleItemsInfo.size == scrollState.layoutInfo.totalItemsCount)
+                        && !swipeRefreshLoadMoreState.swipeRefreshState.isRefreshing
+            }
+        }
+        LaunchedEffect(Unit) {
+            snapshotFlow { isReachedBottom }
+                .collect { isReached ->
+                    if (isReached
+                        && swipeRefreshLoadMoreState.canLoadMore
+                    ) {
+                        swipeRefreshLoadMoreState.canLoadMore = false
+                        swipeRefreshLoadMoreState.swipeRefreshState
+                        swipeRefreshLoadMoreState.loadMore()
+                    }
+                }
+        }
         LazyColumn(state = scrollState) {
             swipeRefreshLoadMoreState.refresh(false)
             if (headContent != null) {
@@ -85,46 +104,42 @@ fun <T> SwipeRefreshLoadMore(
                     }
                 }
             }
+            if (swipeRefreshLoadMoreState.canLoadMore) {
+                item {
+                    if (loadMoreContent == null) {
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 30.dp)
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(24.dp, 24.dp),
+                                color = Color.Red,
+                                strokeWidth = 2.dp
+                            )
+                            Spacer(modifier = Modifier.width(20.dp))
+                            Text(
+                                text = "加载更多",
+                                color = Color.Black,
+                                fontSize = 14.sp
+                            )
+                        }
+                    } else {
+                        loadMoreContent()
+                    }
+                }
+            } else {
+                if (footContent != null && swipeRefreshLoadMoreState.dataSetted) {
+                    item {
+                        footContent()
+                    }
+                }
+            }
             composableScope.launch {
                 if (QueryType.Init == swipeRefreshLoadMoreState.queryType) {
                     scrollState.scrollToItem(0, 0)
-                }
-                if (swipeRefreshLoadMoreState.canLoadMore) {
-                    item {
-                        if (loadMoreContent == null) {
-                            Row(
-                                horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 30.dp)
-                            ) {
-                                CircularProgressIndicator(
-                                    modifier = Modifier.size(24.dp, 24.dp),
-                                    color = Color.Red,
-                                    strokeWidth = 2.dp
-                                )
-                                Spacer(modifier = Modifier.width(20.dp))
-                                Text(
-                                    text = "加载更多",
-                                    color = Color.Black,
-                                    fontSize = 14.sp
-                                )
-                            }
-                        } else {
-                            loadMoreContent()
-                        }
-                        composableScope.launch {
-                            delay(500)
-                            swipeRefreshLoadMoreState.loadMore()
-                        }
-                    }
-                } else {
-                    if (footContent != null) {
-                        item {
-                            footContent()
-                        }
-                    }
                 }
             }
         }
@@ -167,13 +182,34 @@ class SwipeRefreshLoadMoreState<T>(
                 data.addAll(it)
             }
         } else {
-            data.clear();
+            data.clear()
             listResponse?.dataList?.let {
                 data.addAll(it)
             }
         }
         listResponse?.let {
             canLoadMore = it.hasNextPage()
+        }
+    }
+
+    fun updateData(t: T, index: Int) {
+        queryType = QueryType.Null
+        val src = (t as Any).javaClass
+        val tmp = src.newInstance()
+        val dest = tmp.javaClass
+        cloneData(dest, src, tmp, t)
+        data[index] = tmp as T
+    }
+
+    private fun cloneData(dest: Class<Any>, src: Class<Any>, destObj: Any, srcObj: Any) {
+        dest.declaredFields.forEach {
+            it.isAccessible = true
+            val srcFiled = src.getDeclaredField(it.name)
+            srcFiled.isAccessible = true
+            it.set(destObj, srcFiled.get(srcObj))
+        }
+        if (dest.superclass != null) {
+            cloneData(dest.superclass!!, src.superclass!!, destObj, srcObj)
         }
     }
 
@@ -216,5 +252,5 @@ interface IPageReq {
 }
 
 enum class QueryType {
-    Init, Refresh, LoadMore;
+    Init, Refresh, LoadMore, Null;
 }

@@ -37,3 +37,16 @@ dependencies {
     compileOnly 'androidx.lifecycle:lifecycle-common-java8:2.0.0'
     compileOnly 'com.squareup.okhttp3:logging-interceptor:3.4.1'
 }
+
+afterEvaluate {
+    publishing {
+        publications {
+            mavenPublish(MavenPublication) {
+                groupId = rootProject.ext.groupId
+                artifactId = 'retrofitextension'
+                version = rootProject.ext.version
+                from components.release
+            }
+        }
+    }
+}

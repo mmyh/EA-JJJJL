@@ -32,3 +32,16 @@ dependencies {
     compileOnly 'androidx.constraintlayout:constraintlayout:2.0.4'
 
 }
+
+afterEvaluate {
+    publishing {
+        publications {
+            mavenPublish(MavenPublication) {
+                groupId = rootProject.ext.groupId
+                artifactId = 'listhelper'
+                version = rootProject.ext.version
+                from components.release
+            }
+        }
+    }
+}

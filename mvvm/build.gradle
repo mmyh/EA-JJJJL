@@ -30,3 +30,16 @@ dependencies {
     compileOnly 'androidx.appcompat:appcompat:1.0.2'
     implementation project(':annotation')
 }
+
+afterEvaluate {
+    publishing {
+        publications {
+            mavenPublish(MavenPublication) {
+                groupId = rootProject.ext.groupId
+                artifactId = 'mvvm'
+                version = rootProject.ext.version
+                from components.release
+            }
+        }
+    }
+}

@@ -5,6 +5,7 @@ import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mmyh.eajjjjl.widget.composelist.IPageRes
+import java.io.Serializable
 
 class ComposeListVM : ViewModel() {
 
@@ -28,6 +29,7 @@ class ComposeListVM : ViewModel() {
                     product.index = i.toString()
                     product.name = System.currentTimeMillis().toString()
                     product.price = (i * 100).toString()
+                    product.mark = (i * 10).toString()
                     res.dataList!!.add(product)
                     i++
                 }
@@ -51,13 +53,19 @@ class ComposeListVM : ViewModel() {
 
     }
 
-    class Product {
+    class Product : Base() {
 
         var index: String? = null
 
         var name: String? = null
 
         var price: String? = null
+
+    }
+
+    open class Base {
+
+        var mark: String? = null
 
     }
 }

@@ -1,5 +1,6 @@
 package com.mmyh.eajjjjl.widget.composelist
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
@@ -41,6 +42,7 @@ fun <T> SwipeRefreshLoadMore(
     swipeRefreshLoadMoreState: SwipeRefreshLoadMoreState<T>,
     loadMoreContent: @Composable (LazyItemScope.() -> Unit)? = null,
     emptyContent: @Composable (modifier: Modifier) -> Unit = {},
+    netErrorContent: @Composable (modifier: Modifier) -> Unit = {},
     headContent: @Composable (() -> Unit)? = null,
     footContent: @Composable (() -> Unit)? = null,
     renderItem: @Composable (index: Int, t: T) -> Unit
@@ -80,28 +82,41 @@ fun <T> SwipeRefreshLoadMore(
         }
         LazyColumn(state = scrollState) {
             swipeRefreshLoadMoreState.refresh(false)
-            if (headContent != null) {
-                item {
-                    headContent()
+            item {
+                var tmpM: Modifier = Modifier
+                if (swipeRefreshLoadMoreState.data.size == 0) {
+                    tmpM = tmpM.fillParentMaxHeight()
+                }
+                Column(
+                    modifier = tmpM
+                ) {
+                    if (headContent != null) {
+                        headContent()
+                    }
+                    if (swipeRefreshLoadMoreState.data.size == 0 && swipeRefreshLoadMoreState.dataSetted) {
+                        if (swipeRefreshLoadMoreState.isNetError) {
+                            netErrorContent(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .fillMaxHeight()
+                            )
+                        } else {
+                            emptyContent(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .fillMaxHeight()
+                            )
+                        }
+                    }
                 }
             }
-            if (swipeRefreshLoadMoreState.data.size == 0 && swipeRefreshLoadMoreState.dataSetted) {
-                item {
-                    emptyContent(
-                        Modifier
-                            .fillMaxWidth()
-                            .fillParentMaxHeight()
-                    )
-                }
-            } else {
-                items(count = swipeRefreshLoadMoreState.data.size) { index ->
-                    Column(Modifier.fillMaxWidth()) {
-                        if (index == 0) {
-                            Spacer(modifier = Modifier.height(itemDecoration))
-                        }
-                        renderItem(index, swipeRefreshLoadMoreState.data[index])
+            items(count = swipeRefreshLoadMoreState.data.size) { index ->
+                Column(Modifier.fillMaxWidth()) {
+                    if (index == 0) {
                         Spacer(modifier = Modifier.height(itemDecoration))
                     }
+                    renderItem(index, swipeRefreshLoadMoreState.data[index])
+                    Spacer(modifier = Modifier.height(itemDecoration))
                 }
             }
             if (swipeRefreshLoadMoreState.canLoadMore) {
@@ -131,7 +146,10 @@ fun <T> SwipeRefreshLoadMore(
                     }
                 }
             } else {
-                if (footContent != null && swipeRefreshLoadMoreState.dataSetted) {
+                if (footContent != null
+                    && swipeRefreshLoadMoreState.dataSetted
+                    && swipeRefreshLoadMoreState.data.size > 0
+                ) {
                     item {
                         footContent()
                     }
@@ -171,12 +189,15 @@ class SwipeRefreshLoadMoreState<T>(
 
     internal var dataSetted = false
 
+    internal var isNetError = false
+
     fun getData(): MutableList<T> {
         return data
     }
 
     fun setData(listResponse: IPageRes<T>?) {
         dataSetted = true
+        this.isNetError = listResponse?.isNetError() == true
         if (QueryType.LoadMore == queryType) {
             listResponse?.dataList?.let {
                 data.addAll(it)
@@ -238,6 +259,8 @@ class SwipeRefreshLoadMoreState<T>(
 interface IPageRes<T> {
 
     fun hasNextPage(): Boolean
+
+    fun isNetError(): Boolean
 
     val dataList: ArrayList<T>?
 

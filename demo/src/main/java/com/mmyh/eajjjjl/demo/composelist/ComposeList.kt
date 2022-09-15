@@ -64,6 +64,12 @@ class ComposeList : BaseActivity() {
                                 .background(Color.Blue)
                                 .fillMaxWidth()
                         )
+                    },
+                    netErrorContent = { vale ->
+                        Text(text = "netError", modifier = vale.background(Color.Gray))
+                    },
+                    emptyContent = { vale ->
+                        Text(text = "empry", modifier = vale.background(Color.Red))
                     }
                 ) { index, value ->
                     Column(Modifier.clickable {

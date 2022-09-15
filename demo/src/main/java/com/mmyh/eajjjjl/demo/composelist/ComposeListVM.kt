@@ -50,6 +50,9 @@ class ComposeListVM : ViewModel() {
         }
 
         override var dataList: ArrayList<Product>? = null
+        override fun isNetError(): Boolean {
+            return false
+        }
 
     }
 

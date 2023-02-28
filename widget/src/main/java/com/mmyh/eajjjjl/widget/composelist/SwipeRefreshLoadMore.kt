@@ -1,10 +1,9 @@
 package com.mmyh.eajjjjl.widget.composelist
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -60,8 +59,7 @@ fun <T> SwipeRefreshLoadMore(
         indicator = indicator,
         clipIndicatorToPadding = clipIndicatorToPadding
     ) {
-        val composableScope = rememberCoroutineScope()
-        val scrollState = rememberLazyListState()
+        val scrollState = swipeRefreshLoadMoreState.scrollState
         val isReachedBottom by remember {
             derivedStateOf {
                 (scrollState.firstVisibleItemIndex + scrollState.layoutInfo.visibleItemsInfo.size == scrollState.layoutInfo.totalItemsCount)
@@ -155,7 +153,9 @@ fun <T> SwipeRefreshLoadMore(
                     }
                 }
             }
-            composableScope.launch {
+        }
+        LaunchedEffect(swipeRefreshLoadMoreState.initQueried) {
+            if (swipeRefreshLoadMoreState.initQueried) {
                 if (QueryType.Init == swipeRefreshLoadMoreState.queryType) {
                     scrollState.scrollToItem(0, 0)
                 }
@@ -191,6 +191,10 @@ class SwipeRefreshLoadMoreState<T>(
 
     internal var isNetError = false
 
+    internal var initQueried by mutableStateOf(false, neverEqualPolicy())
+
+    var scrollState = LazyListState()
+
     fun getData(): MutableList<T> {
         return data
     }
@@ -210,6 +214,9 @@ class SwipeRefreshLoadMoreState<T>(
         }
         listResponse?.let {
             canLoadMore = it.hasNextPage()
+        }
+        if (QueryType.Init == queryType) {
+            initQueried = true
         }
     }
 

@@ -85,14 +85,18 @@ public class EALoadingDialog {
                     } else if (owner instanceof Fragment) {
                         activity = ((Fragment) owner).getActivity();
                     }
-                    if (activity != null && !activity.isFinishing()) {
+                    if (activity != null && !activity.isFinishing() && rootView.getTag(R.id.re_loading_count) != null) {
                         int count = (int) rootView.getTag(R.id.re_loading_count);
                         if (count > 0) {
                             count--;
                         }
                         rootView.setTag(R.id.re_loading_count, count);
                         if (view != null && count == 0 && view.getVisibility() != View.GONE) {
-                            long tmp = 500 - (System.currentTimeMillis() - (long) rootView.getTag(R.id.re_loading_time));
+                            long lastTime = 0;
+                            if (rootView.getTag(R.id.re_loading_time) != null) {
+                                lastTime = (long) rootView.getTag(R.id.re_loading_time);
+                            }
+                            long tmp = 500 - (System.currentTimeMillis() - lastTime);
                             if (tmp < 0) {
                                 tmp = 0;
                             }

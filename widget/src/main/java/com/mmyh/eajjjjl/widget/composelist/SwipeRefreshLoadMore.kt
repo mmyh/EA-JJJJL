@@ -59,6 +59,7 @@ fun <T> SwipeRefreshLoadMore(
         indicator = indicator,
         clipIndicatorToPadding = clipIndicatorToPadding
     ) {
+        val coroutineScope = rememberCoroutineScope()
         val scrollState = swipeRefreshLoadMoreState.scrollState
         val isReachedBottom by remember {
             derivedStateOf {
@@ -153,10 +154,9 @@ fun <T> SwipeRefreshLoadMore(
                     }
                 }
             }
-        }
-        LaunchedEffect(swipeRefreshLoadMoreState.initQueried) {
-            if (swipeRefreshLoadMoreState.initQueried) {
-                if (QueryType.Init == swipeRefreshLoadMoreState.queryType) {
+            if (swipeRefreshLoadMoreState.scrollToFirst) {
+                swipeRefreshLoadMoreState.scrollToFirst = false
+                coroutineScope.launch {
                     scrollState.scrollToItem(0, 0)
                 }
             }
@@ -191,7 +191,7 @@ class SwipeRefreshLoadMoreState<T>(
 
     internal var isNetError = false
 
-    internal var initQueried by mutableStateOf(false, neverEqualPolicy())
+    internal var scrollToFirst = false
 
     var scrollState = LazyListState()
 
@@ -201,6 +201,9 @@ class SwipeRefreshLoadMoreState<T>(
 
     fun setData(listResponse: IPageRes<T>?) {
         dataSetted = true
+        if (QueryType.Init == queryType) {
+            scrollToFirst = true
+        }
         this.isNetError = listResponse?.isNetError() == true
         if (QueryType.LoadMore == queryType) {
             listResponse?.dataList?.let {
@@ -214,9 +217,6 @@ class SwipeRefreshLoadMoreState<T>(
         }
         listResponse?.let {
             canLoadMore = it.hasNextPage()
-        }
-        if (QueryType.Init == queryType) {
-            initQueried = true
         }
     }
 

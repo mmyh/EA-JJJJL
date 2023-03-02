@@ -167,16 +167,18 @@ fun <T> SwipeRefreshLoadMore(
 @Composable
 fun <T> rememberSwipeRefreshLoadMoreState(
     pageReq: IPageReq,
-    query: (queryType: QueryType) -> Unit
+    query: (queryType: QueryType) -> Unit,
+    onDataUpdated: ((MutableList<T>) -> Unit)? = null,
 ): SwipeRefreshLoadMoreState<T> {
     return remember {
-        SwipeRefreshLoadMoreState(pageReq, query)
+        SwipeRefreshLoadMoreState(pageReq, query, onDataUpdated)
     }
 }
 
 class SwipeRefreshLoadMoreState<T>(
     private var pageReq: IPageReq,
-    internal var query: (queryType: QueryType) -> Unit
+    internal var query: (queryType: QueryType) -> Unit,
+    private var onDataUpdated: ((MutableList<T>) -> Unit)? = null,
 ) {
 
     internal var canLoadMore: Boolean = false
@@ -218,6 +220,7 @@ class SwipeRefreshLoadMoreState<T>(
         listResponse?.let {
             canLoadMore = it.hasNextPage()
         }
+        onDataUpdated?.invoke(data.toMutableList())
     }
 
     fun updateData(t: T, index: Int) {

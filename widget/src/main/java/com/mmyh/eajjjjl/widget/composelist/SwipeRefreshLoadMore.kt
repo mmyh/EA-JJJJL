@@ -167,18 +167,18 @@ fun <T> SwipeRefreshLoadMore(
 @Composable
 fun <T> rememberSwipeRefreshLoadMoreState(
     pageReq: IPageReq,
-    query: (queryType: QueryType) -> Unit,
     onDataUpdated: ((MutableList<T>) -> Unit)? = null,
+    query: (queryType: QueryType) -> Unit,
 ): SwipeRefreshLoadMoreState<T> {
     return remember {
-        SwipeRefreshLoadMoreState(pageReq, query, onDataUpdated)
+        SwipeRefreshLoadMoreState(pageReq, onDataUpdated, query)
     }
 }
 
 class SwipeRefreshLoadMoreState<T>(
     private var pageReq: IPageReq,
-    internal var query: (queryType: QueryType) -> Unit,
     private var onDataUpdated: ((MutableList<T>) -> Unit)? = null,
+    internal var query: (queryType: QueryType) -> Unit,
 ) {
 
     internal var canLoadMore: Boolean = false

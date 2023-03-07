@@ -83,7 +83,7 @@ fun <T> SwipeRefreshLoadMore(
             swipeRefreshLoadMoreState.refresh(false)
             item {
                 var tmpM: Modifier = Modifier
-                if (swipeRefreshLoadMoreState.data.size == 0) {
+                if (swipeRefreshLoadMoreState.data.size == 0 && headContent == null) {
                     tmpM = tmpM.fillParentMaxHeight()
                 }
                 Column(

@@ -47,6 +47,6 @@ task clean(type: Delete) {
 }
 
 ext {
-    groupId = "com.github.mmyh.EA-JJJJL"
-    version = "2.3.1"
+    groupId = "com.github.mmyh"
+    version = "2.2.7"
 }
